@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "invesha"
-version = "0.1.0"
+version = "0.2.0"
 description = "Company, project finance and startup financial models with valuation, investment suggestions and Excel export."
 readme = "README.md"
 requires-python = ">=3.10"

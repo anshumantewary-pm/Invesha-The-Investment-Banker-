@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0
+
+- New sectors: specialty chemicals, automobiles and auto components, education
+- CLI: `invesha samples` and `invesha example KIND:SAMPLE`
+- Academy: sum-of-the-parts and project construction lessons, five new glossary terms
+- Favicon, social sharing tags and a not-found page for the hosted site
+- Methodology documentation, contributing guide, security policy and issue / PR templates
+- More tests: line-item classification, period and unit detection, merger workbook recalculation
+
 ## 0.1.0
 
 - Company valuation: projections, WACC, DCF (perpetuity and exit), comparables, LBO, scenarios, Monte Carlo, reverse DCF, credit profile and executive summary
