@@ -129,6 +129,11 @@ const LESSONS = [
     { h: "Sculpting", p: "Instead of equal payments, repayments are shaped to follow cash flow so DSCR stays flat at the target each period. It maximises debt for a given covenant." },
     { h: "Equity returns and the break-even tariff", p: "Equity receives what is left after debt service. The break-even tariff is the price that gives equity exactly its hurdle return." },
   ], pro: "Lenders size on the P90 (1-in-10 downside) energy yield or traffic, not the P50 base case. Re-run the model on the downside before showing it to banks." },
+  { id: "pf-construction", module: "project", title: "Construction, IDC and reserve accounts", minutes: 6, sections: [
+    { h: "Interest during construction", p: "Debt is drawn during the build, before the project earns anything, so interest accrues with no revenue to pay it. It is <b>capitalised</b>: added to the project cost and funded by the same debt and equity.", f: "IDC ≈ Average debt drawn during construction × Interest rate × Years of construction" },
+    { h: "Reserve accounts", p: "Lenders require cash buffers: a <b>debt service reserve account</b> (DSRA, often 6 months of debt service) and sometimes a maintenance reserve. They protect lenders but trap cash, lowering equity returns." },
+    { h: "Delay risk", p: "A one-year delay adds a year of IDC, pushes revenue back and shortens the operating life within a fixed concession. The platform's stress test shows its effect on equity IRR and DSCR." },
+  ], pro: "Lenders' technical advisers test the construction schedule as hard as the revenue case. Fixed-price, date-certain EPC contracts with liquidated damages are what make the IDC estimate bankable.", try: "project:toll" },
   // ---------------------------------------------------------------- 10
   { id: "unit-economics", module: "startup", title: "Unit economics", minutes: 8, sections: [
     { h: "Key metrics", p: "<b>ARPU</b> (average revenue per user), <b>churn</b> (share of customers lost each month), <b>CAC</b> (cost to acquire a customer), <b>gross margin</b>.",
