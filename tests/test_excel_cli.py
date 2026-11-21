@@ -82,3 +82,10 @@ def test_cli_samples_list(capsys):
     out = capsys.readouterr().out
     assert "company:saas" in out
     assert "merger:bolt_on" in out
+
+
+def test_cli_example_accepts_samples(capsys):
+    assert cli.main(["example", "company:saas"]) == 0
+    assert json.loads(capsys.readouterr().out)["name"] == "Cloudpeak Software Ltd"
+    assert cli.main(["example", "company:nope"]) == 2
+    assert cli.main(["example", "bogus"]) == 2

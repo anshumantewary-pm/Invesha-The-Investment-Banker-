@@ -62,14 +62,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         p.add_argument("--file", required=True, help="JSON inputs (see 'invesha example')")
         p.add_argument("--xlsx", help="also write the Excel workbook here")
         p.add_argument("--json", action="store_true", help="print the full report as JSON")
-    ex = sub.add_parser("example", help="print example inputs")
-    ex.add_argument("kind", choices=list(MODELS))
+    ex = sub.add_parser("example", help="print example inputs (a model name, or KIND:SAMPLE from 'samples')")
+    ex.add_argument("kind")
     sub.add_parser("sectors", help="list sectors")
     sub.add_parser("samples", help="list the sample library")
     args = parser.parse_args(argv)
 
     if args.command == "example":
-        print(json.dumps(EXAMPLES[args.kind], indent=2, ensure_ascii=False))
+        kind, _, sample = args.kind.partition(":")
+        if kind not in MODELS:
+            print(f"error: unknown model {kind!r}; choose from {', '.join(MODELS)}", file=sys.stderr)
+            return 2
+        data = EXAMPLES[kind]
+        if sample:
+            match = next((s for s in SAMPLES[kind] if s["id"] == sample), None)
+            if match is None:
+                print(f"error: unknown sample {args.kind!r}; run 'invesha samples'", file=sys.stderr)
+                return 2
+            data = {k: v for k, v in match["inputs"].items() if v is not None}
+        print(json.dumps(data, indent=2, ensure_ascii=False))
         return 0
     if args.command == "samples":
         for kind, items in SAMPLES.items():
