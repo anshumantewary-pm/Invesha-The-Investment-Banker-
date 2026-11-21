@@ -89,3 +89,22 @@ def test_cli_example_accepts_samples(capsys):
     assert json.loads(capsys.readouterr().out)["name"] == "Cloudpeak Software Ltd"
     assert cli.main(["example", "company:nope"]) == 2
     assert cli.main(["example", "bogus"]) == 2
+
+
+@pytest.mark.skipif(not shutil.which("soffice"), reason="LibreOffice not installed")
+def test_merger_workbook_formulas_recalculate(tmp_path):
+    src = tmp_path / "merger.xlsx"
+    src.write_bytes(excel.build("merger", EXAMPLES["merger"]))
+    out = tmp_path / "out"
+    subprocess.run(
+        ["soffice", "--headless", "--calc", "--convert-to", "xlsx", "--outdir", str(out), str(src)],
+        check=True,
+        capture_output=True,
+        timeout=180,
+    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        cached = openpyxl.load_workbook(src, data_only=True)["Accretion model"]
+        fresh = openpyxl.load_workbook(out / "merger.xlsx", data_only=True)["Accretion model"]
+    for cell in ("B3", "B10", "B18", "C18", "B20", "C20", "B22"):
+        assert fresh[cell].value == pytest.approx(cached[cell].value, rel=1e-9)
