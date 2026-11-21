@@ -75,3 +75,10 @@ def test_cli(tmp_path, capsys):
     bad.write_text(json.dumps({**EXAMPLES["company"], "revenue": -1}), encoding="utf-8")
     assert cli.main(["company", "--file", str(bad)]) == 2
     assert cli.main(["company", "--file", str(tmp_path / "missing.json")]) == 2
+
+
+def test_cli_samples_list(capsys):
+    assert cli.main(["samples"]) == 0
+    out = capsys.readouterr().out
+    assert "company:saas" in out
+    assert "merger:bolt_on" in out

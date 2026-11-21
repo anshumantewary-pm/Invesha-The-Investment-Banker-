@@ -13,7 +13,7 @@ from typing import Any
 
 from invesha import __version__, corporate, excel, merger, project, startup
 from invesha.core import InputError, Report, fmt_value
-from invesha.examples import EXAMPLES
+from invesha.examples import EXAMPLES, SAMPLES
 from invesha.sectors import SECTORS
 
 MODELS = {
@@ -65,10 +65,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     ex = sub.add_parser("example", help="print example inputs")
     ex.add_argument("kind", choices=list(MODELS))
     sub.add_parser("sectors", help="list sectors")
+    sub.add_parser("samples", help="list the sample library")
     args = parser.parse_args(argv)
 
     if args.command == "example":
         print(json.dumps(EXAMPLES[args.kind], indent=2, ensure_ascii=False))
+        return 0
+    if args.command == "samples":
+        for kind, items in SAMPLES.items():
+            for item in items:
+                print(f"{kind}:{item['id']:<16} {item['title']:<36} {item['tag']}")
         return 0
     if args.command == "sectors":
         for s in SECTORS.values():
