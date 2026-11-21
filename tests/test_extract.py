@@ -1,6 +1,6 @@
 import pytest
 
-from invesha.extract import _chronological, _is_period, classify
+from invesha.extract import _chronological, _is_period, _num, _unit, classify
 
 
 @pytest.mark.parametrize(
@@ -58,3 +58,37 @@ def test_chronological_ordering():
     assert _chronological(["2023-24", "2021-22", "2022-23"]) == [1, 2, 0]
     assert _chronological(["Mar-24", "Jan-24", "Feb-24"]) == [1, 2, 0]
     assert _chronological(["a", "b"]) == [0, 1]
+
+
+@pytest.mark.parametrize(
+    ("text", "unit"),
+    [
+        ("(all amounts in ₹ crore)", ("Cr", "₹")),
+        ("rs. in lakhs", ("L", "₹")),
+        ("($ in millions)", ("Mn", "$")),
+        ("amounts in usd thousands", ("K", "$")),
+    ],
+)
+def test_unit_detection(text, unit):
+    assert _unit(text) == unit
+
+
+def test_unit_needs_context():
+    assert _unit("crore of reasons") is None
+
+
+@pytest.mark.parametrize(
+    ("cell", "value"),
+    [
+        ("1,200", 1200.0),
+        ("(45.5)", -45.5),
+        ("12%", 0.12),
+        ("₹ 3,000", 3000.0),
+        ("-", 0.0),
+        ("n/a", None),
+        (7, 7.0),
+        (True, None),
+    ],
+)
+def test_number_parsing(cell, value):
+    assert _num(cell) == value
