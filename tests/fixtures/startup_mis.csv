@@ -1,0 +1,10 @@
+Startup name,LedgerLoop
+Metric,Jan-24,Feb-24,Mar-24,Apr-24,May-24,Jun-24
+Paying customers,40,62,85,107,132,156
+New customers,25,26,28,27,30,29
+Churned customers,1,4,5,5,5,5
+MRR,10.0,15.5,21.3,26.8,33.0,39.0
+Marketing spend,37.5,39.0,42.0,40.5,45.0,43.5
+Payroll costs,24,24,26,26,28,28
+Other expenses,4,4,4.5,4.5,5,5
+Cash balance,380,345,310,280,250,222

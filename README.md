@@ -11,7 +11,7 @@ Everything runs in the browser (the Python engine is loaded with Pyodide), so no
 1. **Sign in** (or create an account, or continue as a guest).
 2. **Pick a model**: company valuation, project finance or startup.
 3. **Add your data**, either way:
-   - **Upload** an Excel (.xlsx), CSV or JSON file: the platform's template, any simple two-column sheet (field, value), or an Invesha Excel model you downloaded earlier (edit it and upload it again). Percentages can be written as `18%`, `18` or `0.18`.
+   - **Upload any spreadsheet**, no template needed: annual-report financial statements (P&L, balance sheet, cash flow), a management P&L, a monthly startup MIS or a project term sheet, as Excel (.xlsx, every sheet is scanned), CSV or JSON. The platform finds the year columns, recognises line items by their Ind-AS / IFRS / US GAAP names, takes the latest year and calculates the model's inputs: EBITDA (PBT + D&A + finance costs), revenue growth from history, D&A / capex / working capital as a share of revenue, effective tax rate, cost of debt, shares from EPS, and for startups ARPU, churn and CAC. It shows a **trace** of every value (found or calculated, with the source row) and lists only the inputs it could not find.
    - **Fill in manually** from a blank form (sensible defaults pre-filled) or a worked example.
 4. **Review** the filled form, then **Build model** to get the report, charts and suggestions, and download the Excel model.
 
@@ -69,7 +69,8 @@ src/invesha/
   project.py     project finance: debt sculpting, DSCR/LLCR, IRRs, stress tests
   startup.py     monthly startup model, unit economics, VC method
   excel.py       workbook builders (live formulas)
-  inputs_io.py   read uploaded Excel / CSV / JSON inputs; make templates
+  extract.py     automatic extraction from statements / MIS / term sheets, with a trace
+  inputs_io.py   read uploaded Excel / CSV / JSON files
   fields.py      input field definitions (form, templates, upload mapping)
   xlsx.py        dependency-free .xlsx writer
   sectors.py     indicative sector multiples, betas and ranges

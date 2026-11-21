@@ -13,6 +13,7 @@ So all of these work:
 
 from __future__ import annotations
 
+import contextlib
 import csv
 import io
 import json
@@ -48,7 +49,7 @@ def _lookup(kind: str) -> dict[str, list[str]]:
 # ---------------------------------------------------------------- reading files
 
 
-def _xlsx_rows(data: bytes) -> list[list[Any]]:
+def _xlsx_grids(data: bytes) -> list[tuple[str, list[list[Any]]]]:
     try:
         z = zipfile.ZipFile(io.BytesIO(data))
     except zipfile.BadZipFile:
@@ -65,10 +66,20 @@ def _xlsx_rows(data: bytes) -> list[list[Any]]:
     sheets = [(s.get("name") or "", targets.get(s.get(REL_NS))) for s in (node if node is not None else [])]
     if not sheets:
         raise InputError("the workbook has no sheets")
-    # Prefer a sheet called Inputs (the platform's own workbook), else the first sheet.
-    name, target = next((s for s in sheets if s[0].strip().lower() == "inputs"), sheets[0])
-    path = target.lstrip("/") if target and target.startswith("/") else f"xl/{target}"
-    root = ET.fromstring(z.read(path))
+    # The Inputs sheet (the platform's own workbook) first, then every other sheet.
+    sheets.sort(key=lambda s: s[0].strip().lower() != "inputs")
+    grids: list[tuple[str, list[list[Any]]]] = []
+    for name, target in sheets:
+        if not target:
+            continue
+        path = target.lstrip("/") if target.startswith("/") else f"xl/{target}"
+        if path not in z.namelist():
+            continue
+        grids.append((name, _sheet_rows(ET.fromstring(z.read(path)), shared)))
+    return grids
+
+
+def _sheet_rows(root: ET.Element, shared: list[str]) -> list[list[Any]]:
     rows: list[list[Any]] = []
     for row in root.iter(f"{{{NS['m']}}}row"):
         cells: dict[int, Any] = {}
@@ -157,10 +168,17 @@ def _convert(spec: list[str], raw: Any) -> Any:
         raise InputError(f"{label}: could not read {raw!r} ({error})") from None
 
 
+def _cell_number(cell: Any) -> float | None:
+    from invesha.extract import _num
+
+    return None if cell is None or (isinstance(cell, str) and not cell.strip()) else _num(cell)
+
+
 def parse_rows(kind: str, rows: list[list[Any]]) -> dict[str, Any]:
     lookup = _lookup(kind)
     value_col = 1
     found: dict[str, Any] = {}
+    sources: dict[str, str] = {}
     unknown: list[str] = []
     for row in rows:
         if not row or row[0] is None:
@@ -170,6 +188,9 @@ def parse_rows(kind: str, rows: list[list[Any]]) -> dict[str, Any]:
         if "value" in lowered and first in ("key", "field", "input", "name", "item"):
             value_col = lowered.index("value")
             continue
+        numeric = sum(1 for c in row[1:] if _cell_number(c) is not None)
+        if numeric > 1 and value_col == 1:
+            continue  # a multi-year row: the automatic extractor reads these (latest year, history)
         spec = lookup.get(first)
         if spec is None and len(row) > 1 and row[1] is not None:
             spec = lookup.get(_norm(row[1]))  # template rows also carry the label in column B
@@ -178,19 +199,20 @@ def parse_rows(kind: str, rows: list[list[Any]]) -> dict[str, Any]:
                 unknown.append(str(row[0]))
             continue
         raw = row[value_col] if len(row) > value_col else None
+        if spec[0] in found:
+            continue  # first match wins: the Inputs sheet is read before summary sheets
         value = _convert(spec, raw)
         if value is not None:
             found[spec[0]] = value
-    return {"inputs": found, "matched": len(found), "ignored": unknown[:20]}
+            sources[spec[0]] = str(row[0])
+    return {"inputs": found, "matched": len(found), "ignored": unknown[:20], "sources": sources}
 
 
-def parse_file(kind: str, filename: str, data: bytes) -> dict[str, Any]:
-    if kind not in FORMS:
-        raise InputError(f"unknown model {kind!r}")
+def _grids(filename: str, data: bytes) -> list[tuple[str, list[list[Any]]]]:
     name = filename.lower()
     if name.endswith((".xlsx", ".xlsm")):
-        result = parse_rows(kind, _xlsx_rows(data))
-    elif name.endswith(".json"):
+        return _xlsx_grids(data)
+    if name.endswith(".json"):
         try:
             obj = json.loads(data.decode("utf-8-sig"))
         except (UnicodeDecodeError, json.JSONDecodeError) as error:
@@ -198,16 +220,66 @@ def parse_file(kind: str, filename: str, data: bytes) -> dict[str, Any]:
         obj = obj.get("inputs", obj) if isinstance(obj, dict) else obj
         if not isinstance(obj, dict):
             raise InputError("the JSON file must contain an object of inputs")
-        result = parse_rows(kind, [[k, v] for k, v in obj.items()])
-    elif name.endswith((".csv", ".txt", ".tsv")):
-        result = parse_rows(kind, _csv_rows(data.decode("utf-8-sig", errors="replace")))
-    elif name.endswith(".xls"):
+        return [("JSON", [[k, v] for k, v in obj.items()])]
+    if name.endswith((".csv", ".txt", ".tsv")):
+        return [("CSV", _csv_rows(data.decode("utf-8-sig", errors="replace")))]
+    if name.endswith(".xls"):
         raise InputError("old .xls files are not supported: save as .xlsx or CSV and upload again")
-    else:
-        raise InputError("upload an Excel (.xlsx), CSV or JSON file")
-    if not result["matched"]:
-        raise InputError("no recognised inputs in this file: download the template to see the expected layout")
-    return result
+    raise InputError("upload an Excel (.xlsx), CSV or JSON file")
+
+
+def required_fields(kind: str) -> list[str]:
+    from dataclasses import MISSING
+    from dataclasses import fields as dc_fields
+
+    from invesha.corporate import CompanyInputs
+    from invesha.project import ProjectInputs
+    from invesha.startup import StartupInputs
+
+    cls = {"company": CompanyInputs, "project": ProjectInputs, "startup": StartupInputs}[kind]
+    return [f.name for f in dc_fields(cls) if f.default is MISSING and f.default_factory is MISSING]
+
+
+def parse_file(kind: str, filename: str, data: bytes) -> dict[str, Any]:
+    """Read any spreadsheet: direct field matches plus automatic extraction from statements."""
+    from invesha.extract import extract
+
+    if kind not in FORMS:
+        raise InputError(f"unknown model {kind!r}")
+    grids = _grids(filename, data)
+    direct = parse_rows(kind, [row for _, grid in grids for row in grid])
+    auto = extract(kind, grids)
+    inputs: dict[str, Any] = dict(auto["inputs"])
+    sector_text = inputs.pop("sector_text", None)
+    if sector_text and "sector" not in direct["inputs"]:
+        with contextlib.suppress(InputError):
+            inputs["sector"] = _convert(["sector", "Sector", "sector"], sector_text)
+    trace = [t for t in auto["trace"] if t["field"] not in direct["inputs"]]
+    labels = {spec[0]: spec[1] for spec in fields(kind)}
+    for key, value in direct["inputs"].items():
+        inputs[key] = value
+        trace.append({"field": key, "value": value, "source": direct["sources"][key], "method": "found"})
+    if "unit" in inputs and "unit" not in labels:
+        inputs.pop("unit")
+    for t in trace:
+        t["label"] = labels.get(t["field"], t["field"].replace("_", " ").capitalize())
+    known = set(labels)
+    inputs = {k: v for k, v in inputs.items() if k in known}
+    if not inputs:
+        raise InputError(
+            "could not find any of the figures this model needs in this file. Upload financial statements, "
+            "an MIS or a sheet with labelled rows (e.g. 'Revenue', 'EBITDA', 'Borrowings')."
+        )
+    missing = [k for k in required_fields(kind) if k not in inputs]
+    return {
+        "inputs": inputs,
+        "matched": len(inputs),
+        "trace": [t for t in trace if t["field"] in known],
+        "missing": missing,
+        "missing_labels": [labels.get(k, k) for k in missing],
+        "years": auto["years"],
+        "ignored": list(dict.fromkeys(direct["ignored"] + auto["unmatched"]))[:20],
+    }
 
 
 # ---------------------------------------------------------------- templates

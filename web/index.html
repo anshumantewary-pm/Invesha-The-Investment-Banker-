@@ -157,6 +157,18 @@
   .loaded { display: flex; gap: 10px; align-items: center; padding: 11px 14px; border-radius: 10px; background: var(--good-soft); border: 1px solid rgba(62,207,142,.25); color: var(--good); font-size: 13.5px; margin-bottom: 18px; }
   .loaded .ico { width: 16px; height: 16px; }
 
+  .detects { margin: 2px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 12.5px; color: var(--muted); }
+  .detects li { display: flex; gap: 8px; align-items: baseline; } .detects li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex: none; transform: translateY(-2px); }
+  .found { border: 1px solid var(--line); border-radius: var(--r); margin: 0 0 22px; overflow: hidden; background: rgba(0,0,0,.2); }
+  .found .fh { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 13px 16px; border-bottom: 1px solid var(--line); }
+  .found .fh b { font-weight: 500; } .found .fh span { color: var(--muted); font-size: 12.5px; }
+  .found table td:first-child { background: transparent; position: static; }
+  .found td.srccell { text-align: left; font: 400 12px var(--sans); color: var(--muted); white-space: normal; min-width: 260px; }
+  .found td.val { color: var(--ink); }
+  .meth { font: 500 10.5px var(--mono); padding: 2px 7px; border-radius: 5px; letter-spacing: .06em; text-transform: uppercase; }
+  .meth.found { background: var(--good-soft); color: var(--good); } .meth.derived { background: rgba(124,140,255,.12); color: var(--blue); }
+  .need { padding: 12px 16px; border-top: 1px solid var(--line); background: var(--warn-soft); color: var(--warn); font-size: 13px; display: flex; gap: 8px; align-items: center; }
+  .found .more { padding: 10px 16px; border-top: 1px solid var(--line); font-size: 12px; color: var(--faint); }
   /* data source */
   .sources { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; }
   .src { border-radius: var(--r); border: 1px solid var(--line); padding: 20px; background: rgba(0,0,0,.18); display: flex; flex-direction: column; gap: 12px; }
@@ -344,17 +356,14 @@
     <p class="blurb" id="source-blurb">Upload a file you already have, or enter the figures yourself. You can review and edit everything before the model is built.</p>
     <div class="sources">
       <div class="src">
-        <h3><svg class="ico"><use href="#i-upload"/></svg>Upload a file</h3>
-        <p>Use the template, any two-column sheet (field, value), or an Invesha workbook you downloaded earlier.</p>
+        <h3><svg class="ico"><use href="#i-upload"/></svg>Upload your file</h3>
+        <p>Financial statements, a P&amp;L or balance sheet, a monthly MIS, a term sheet or any spreadsheet, in any layout. The required figures are found and calculated automatically.</p>
         <div class="drop" id="drop" role="button" tabindex="0" aria-label="Upload a data file">
-          <svg class="ico"><use href="#i-file"/></svg><b>Drop a file here, or click to browse</b><small>Read in your browser. Nothing is sent to a server.</small>
+          <svg class="ico"><use href="#i-file"/></svg><b>Drop a file here, or click to browse</b><small>All sheets are scanned in your browser. Nothing is sent to a server.</small>
           <div class="fmt"><span>XLSX</span><span>CSV</span><span>JSON</span></div>
         </div>
         <input type="file" id="upload" accept=".xlsx,.xlsm,.csv,.txt,.json" class="hidden">
-        <div class="actions" style="margin:0">
-          <button class="btn" type="button" id="tpl-xlsx"><svg class="ico"><use href="#i-download"/></svg>Excel template</button>
-          <button class="btn" type="button" id="tpl-csv"><svg class="ico"><use href="#i-download"/></svg>CSV template</button>
-        </div>
+        <ul class="detects"><li>Latest year and growth history from year columns</li><li>EBITDA, margins, tax rate and cost of debt calculated from the statements</li><li>Every value traced to its source row</li></ul>
       </div>
       <div class="src">
         <h3><svg class="ico"><use href="#i-edit"/></svg>Enter manually</h3>
@@ -376,6 +385,7 @@
       </div>
     </div>
     <div class="loaded hidden" id="loaded"></div>
+    <div class="found hidden" id="found"></div>
     <form id="form" novalidate></form>
     <div class="actions">
       <button class="run" type="button" id="run" disabled>Build model <svg class="ico"><use href="#i-arrow"/></svg></button>
@@ -432,7 +442,7 @@ function buildForm() {
     const grid = el("div", { class: "grid" });
     for (const [key, label, type, hint] of fields) {
       let input;
-      if (type === "sector") input = el("select", { id: "f_" + key }, sectors.map(([k, n]) => el("option", { value: k, text: n })));
+      if (type === "sector") input = el("select", { id: "f_" + key }, [el("option", { value: "", text: "Select a sector" }), ...sectors.map(([k, n]) => el("option", { value: k, text: n }))]);
       else if (type === "currency") input = el("select", { id: "f_" + key }, CUR.map(([v, n]) => el("option", { value: v, text: n })));
       else if (type.startsWith("select:")) input = el("select", { id: "f_" + key }, type.slice(7).split(",").map(v => el("option", { value: v, text: v })));
       else if (type === "rounds") input = el("textarea", { id: "f_" + key, placeholder: "14=1500" });
@@ -504,6 +514,7 @@ function openForm(data, banner) {
   fill(data);
   $("loaded").classList.toggle("hidden", !banner);
   if (banner) $("loaded").replaceChildren(icon("i-check"), document.createTextNode(banner));
+  $("found").classList.add("hidden");
   $("source").classList.add("hidden"); $("inputs").classList.remove("hidden"); $("report").classList.add("hidden");
   msg(""); $("inputs").scrollIntoView({ behavior: "smooth", block: "start" });
 }
@@ -513,14 +524,32 @@ function srcMsg(t, e) { $("source-msg").textContent = t; $("source-msg").classNa
 async function uploadFile(f) {
   if (!f) return;
   if (!py) { srcMsg("The engine is still loading; try again in a moment.", true); return; }
-  if (f.size > 5e6) { srcMsg("That file is over 5 MB; upload just the inputs sheet.", true); return; }
+  if (f.size > 8e6) { srcMsg("That file is over 8 MB; upload the statements or the relevant sheets only.", true); return; }
   try {
+    srcMsg("Reading " + f.name + "…");
     const buf = new Uint8Array(await f.arrayBuffer());
     let bin = ""; for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
     const res = call("parse", kind, f.name, btoa(bin));
-    const ignored = res.ignored.length ? ` Ignored ${res.ignored.length} unrecognised row${res.ignored.length > 1 ? "s" : ""} (${res.ignored.slice(0, 3).join(", ")}${res.ignored.length > 3 ? "…" : ""}).` : "";
-    openForm({ ...DEFAULTS[kind], ...res.inputs }, `Loaded ${res.matched} field${res.matched > 1 ? "s" : ""} from ${f.name}. Review them below, then build the model.${ignored}`);
+    openForm({ ...DEFAULTS[kind], ...res.inputs }, "");
+    showFound(res, f.name);
   } catch (e) { srcMsg(e.message, true); }
+}
+
+function showFound(res, filename) {
+  const box = $("found"), types = Object.fromEntries(fields().map(f => [f[0], f[2]]));
+  const fmt = (k, v) => typeof v !== "number" ? String(v) : types[k] === "pct" ? (v * 100).toFixed(1) + "%" : types[k] === "x" ? v.toFixed(2) + "x" : num(v, Math.abs(v) < 1 ? "num" : "money");
+  const span = res.years.length ? ` · periods ${res.years[0]} to ${res.years[res.years.length - 1]}` : "";
+  const rows = res.trace.map(t => el("tr", {}, [el("td", { text: t.label }), el("td", { class: "val", text: fmt(t.field, t.value) }),
+    el("td", {}, [el("span", { class: "meth " + t.method, text: t.method === "found" ? "Found" : "Calculated" })]), el("td", { class: "srccell", text: t.source })]));
+  box.replaceChildren(
+    el("div", { class: "fh" }, [el("div", {}, [icon("i-check"), document.createTextNode(" "), el("b", { text: `${res.matched} inputs traced from ${filename}` }), el("span", { text: span })]),
+      el("span", { text: "Review below; every field stays editable." })]),
+    el("div", { class: "scroll", style: "overflow-x:auto" }, [el("table", {}, [el("thead", {}, [el("tr", {}, ["Input", "Value", "How", "Source"].map(h => el("th", { text: h })))]), el("tbody", {}, rows)])]),
+    res.missing_labels.length ? el("div", { class: "need" }, [icon("i-edit"), document.createTextNode(`Still needed: ${res.missing_labels.join(", ")}. Fill ${res.missing_labels.length > 1 ? "these" : "this"} in below.`)]) : null,
+    res.ignored.length ? el("div", { class: "more", text: `Not used: ${res.ignored.slice(0, 8).join(", ")}${res.ignored.length > 8 ? "…" : ""}` }) : null);
+  box.classList.remove("hidden");
+  for (const k of res.missing) { const n = $("f_" + k); if (n) n.classList.add("missing"); }
+  if (res.missing.length) { const n = $("f_" + res.missing[0]); if (n) setTimeout(() => n.focus({ preventScroll: true }), 400); }
 }
 
 // ------------------------------------------------------------ per-user storage
@@ -895,11 +924,6 @@ for (const ev of ["dragenter", "dragover"]) drop.addEventListener(ev, e => { e.p
 for (const ev of ["dragleave", "drop"]) drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); });
 drop.addEventListener("drop", e => uploadFile(e.dataTransfer.files[0]));
 $("upload").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; uploadFile(f); });
-$("tpl-xlsx").addEventListener("click", () => {
-  try { const b64 = call("template", kind, "xlsx"); const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-    download(`invesha-${kind}-template.xlsx`, new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })); } catch (e) { srcMsg(e.message, true); }
-});
-$("tpl-csv").addEventListener("click", () => { try { download(`invesha-${kind}-template.csv`, new Blob([call("template", kind, "csv")], { type: "text/csv" })); } catch (e) { srcMsg(e.message, true); } });
 $("save-inputs").addEventListener("click", () => { try { const d = read(); download(`${(d.name || kind).replace(/[^\w]+/g, "-")}-inputs.json`, new Blob([JSON.stringify(d, null, 2)], { type: "application/json" })); } catch (e) { msg(e.message, true); } });
 
 // ------------------------------------------------------------ live background
