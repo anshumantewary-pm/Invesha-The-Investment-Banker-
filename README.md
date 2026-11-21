@@ -1,29 +1,46 @@
 # Invesha AutoModel
 
-**Company in → financial model + valuation out.** A web platform for investment banking and corporate finance (CIB) that builds the full model, values the business, gives an investment view with suggestions, and lets you download the whole model as a live Excel workbook.
+**Company in → financial model, valuation and investment view out.** Invesha is a web platform for investment banking and corporate finance that builds bank-grade models from a company's figures or its uploaded financial statements, values the business several ways, gives a recommendation with next steps, and exports the whole model as a live, formula-driven Excel workbook. Invesha Academy teaches every concept from first principles to deal-desk level.
 
-**Web platform:** https://anshumantewary-pm.github.io/Invesha-The-Investment-Banker-/
+[![CI](https://github.com/anshumantewary-pm/Invesha-The-Investment-Banker-/actions/workflows/ci.yml/badge.svg)](https://github.com/anshumantewary-pm/Invesha-The-Investment-Banker-/actions/workflows/ci.yml)
+![Version](https://img.shields.io/badge/version-0.2.0-ff6b2c)
+![Python](https://img.shields.io/badge/python-3.10%2B-3776ab)
+![Dependencies](https://img.shields.io/badge/runtime%20dependencies-0-3ecf8e)
+![License](https://img.shields.io/badge/license-Apache%202.0-lightgrey)
 
-Everything runs in the browser (the Python engine is loaded with Pyodide), so nothing you enter leaves your machine.
+**[Open the platform](https://anshumantewary-pm.github.io/Invesha-The-Investment-Banker-/)** · **[Invesha Academy](https://anshumantewary-pm.github.io/Invesha-The-Investment-Banker-/tutorial.html)** · [Methodology](docs/methodology.md) · [Changelog](CHANGELOG.md)
+
+Everything runs in the browser (the Python engine is loaded with Pyodide): nothing you enter or upload leaves your machine.
+
+## At a glance
+
+| | |
+|---|---|
+| **Models** | Company valuation · Project finance · Startup finance · M&A accretion / dilution |
+| **Valuation toolkit** | DCF (perpetuity and exit), WACC, trading comparables, scenarios, Monte Carlo, reverse DCF, full LBO, credit profile, football field |
+| **Data in** | Upload financial statements, a P&L, an MIS report or a term sheet in any layout (inputs detected automatically with a source trace), use the sample library, or fill in a guided form |
+| **Output** | Verdict, executive summary, charts, sensitivity heatmaps, prioritised suggestions, recommended next steps, full model tables |
+| **Excel** | Live-formula workbook for every model, verified by recalculating every formula in LibreOffice |
+| **Academy** | 12 modules, 23 lessons, quizzes and a 92-term glossary, from the three statements to LBOs and project finance |
+| **Quality** | 140 automated tests, 96%+ coverage, no runtime dependencies |
 
 ## What's in the platform
 
 - **Four models**: company valuation, project finance, startup finance and M&A accretion / dilution.
-- **Sample library**: fictional companies, projects, startups and deals (a BUY, HOLD and REDUCE case, a restructure and an invest case, accretive and dilutive deals), loadable in one click, plus sample financial-statement files to try the automatic upload.
-- **Recommended next steps** in every report, specific to the result (what a deal team would do next).
+- **Sample library**: 12 fictional companies, projects, startups and deals (BUY, HOLD and REDUCE cases, restructure and invest projects, accretive and dilutive deals), loadable in one click, plus sample financial-statement files to try the automatic upload.
+- **Executive summary and recommended next steps** in every report, specific to the result: what a deal team would do next.
 - **Accounts**: sign up with organisation, role and experience level; password strength check; profile and password changes; export or delete your data; **My models** to save, reopen, duplicate and delete named models. Beginners get "?" definitions on every input and links into the Academy.
-- **Invesha Academy** (`tutorial.html`): 12 modules and 21 lessons from the three financial statements to LBOs, M&A, project finance, credit and banker-grade modelling practice. Every lesson explains the vocabulary, gives the formulas, works an example with the platform's numbers, adds a banker-level note and links to a live model ("Try it"). Module quizzes, an 80+ term searchable glossary and progress tracking per account.
+- **Invesha Academy** (`tutorial.html`): every lesson explains the vocabulary, gives the formulas, works an example with the platform's numbers, adds a banker-level note and links to a live model ("Try it"). Module quizzes, a searchable glossary and progress tracking per account.
 
 ## How it works
 
 1. **Sign in** (or create an account, or continue as a guest).
-2. **Pick a model**: company valuation, project finance or startup.
-3. **Add your data**, either way:
+2. **Pick a model**: company valuation, project finance, startup or M&A.
+3. **Add your data**, in any of three ways:
    - **Upload any spreadsheet**, no template needed: annual-report financial statements (P&L, balance sheet, cash flow), a management P&L, a monthly startup MIS or a project term sheet, as Excel (.xlsx, every sheet is scanned), CSV or JSON. The platform finds the year columns, recognises line items by their Ind-AS / IFRS / US GAAP names, takes the latest year and calculates the model's inputs: EBITDA (PBT + D&A + finance costs), revenue growth from history, D&A / capex / working capital as a share of revenue, effective tax rate, cost of debt, shares from EPS, and for startups ARPU, churn and CAC. It shows a **trace** of every value (found or calculated, with the source row) and lists only the inputs it could not find.
+   - **Load a sample** from the library.
    - **Fill in manually** from a blank form (sensible defaults pre-filled) or a worked example.
-4. **Review** the filled form, then **Build model** to get the report, charts and suggestions, and download the Excel model.
-
-Your last inputs for each model are remembered per account, so you can continue where you left off.
+4. **Review** the filled form, then **Build model** to get the report, charts, suggestions and next steps; save it to My models or download the Excel model.
 
 > **About accounts:** the site is static (GitHub Pages), so accounts live on the device: passwords are stored as salted SHA-256 hashes in the browser and never sent anywhere. This separates users on a shared machine but is not server-grade authentication. Connecting a hosted auth service (e.g. Supabase or Firebase) would give real, cross-device accounts.
 
@@ -42,13 +59,14 @@ Each report has key-figure tiles, a verdict, **charts** (football field, grouped
 
 Every model has a **Download Excel model** button. The workbook contains:
 
-- **Summary**: verdict, key figures, assumptions
+- **Summary**: verdict, executive summary, next steps, key figures and assumptions
 - **Inputs**: blue cells you can edit
 - **Live formula sheets**: change an input and the model recalculates
   - Company: `Model` (projections, FCFF, discounting) and `Valuation` (WACC, DCF both ways, comparables, a live WACC × growth grid)
   - Startup: `Monthly model` plus live runway, LTV/CAC and VC valuation
   - Project: `Cash flow model` with revenue, opex, CFADS, DSCR and IRRs as formulas (debt size comes from the engine's sculpting solve)
-- All report tables and the **Suggestions**
+  - M&A: `Accretion model` with pro forma EPS, accretion / dilution, breakeven synergies and ownership as formulas
+- All report tables, the **Suggestions**, the executive summary and recommended next steps
 
 The test suite recalculates the workbooks in LibreOffice and checks every formula against the engine.
 
