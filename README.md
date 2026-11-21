@@ -6,6 +6,19 @@
 
 Everything runs in the browser (the Python engine is loaded with Pyodide), so nothing you enter leaves your machine.
 
+## How it works
+
+1. **Sign in** (or create an account, or continue as a guest).
+2. **Pick a model**: company valuation, project finance or startup.
+3. **Add your data**, either way:
+   - **Upload** an Excel (.xlsx), CSV or JSON file: the platform's template, any simple two-column sheet (field, value), or an Invesha Excel model you downloaded earlier (edit it and upload it again). Percentages can be written as `18%`, `18` or `0.18`.
+   - **Fill in manually** from a blank form (sensible defaults pre-filled) or a worked example.
+4. **Review** the filled form, then **Build model** to get the report, charts and suggestions, and download the Excel model.
+
+Your last inputs for each model are remembered per account, so you can continue where you left off.
+
+> **About accounts:** the site is static (GitHub Pages), so accounts live on the device: passwords are stored as salted SHA-256 hashes in the browser and never sent anywhere. This separates users on a shared machine but is not server-grade authentication. Connecting a hosted auth service (e.g. Supabase or Firebase) would give real, cross-device accounts.
+
 ## Three models
 
 | Model | What you enter | What you get |
@@ -56,6 +69,8 @@ src/invesha/
   project.py     project finance: debt sculpting, DSCR/LLCR, IRRs, stress tests
   startup.py     monthly startup model, unit economics, VC method
   excel.py       workbook builders (live formulas)
+  inputs_io.py   read uploaded Excel / CSV / JSON inputs; make templates
+  fields.py      input field definitions (form, templates, upload mapping)
   xlsx.py        dependency-free .xlsx writer
   sectors.py     indicative sector multiples, betas and ranges
   core.py        finance math, validation, report structures

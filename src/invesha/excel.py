@@ -12,10 +12,13 @@ edit), live formula sheets for the model itself, the full report tables, and Sug
 
 from __future__ import annotations
 
+from dataclasses import asdict
 from typing import Any
 
 from invesha import corporate, project, startup
 from invesha.core import Report, from_dict
+from invesha.fields import fields
+from invesha.inputs_io import _display, _lookup, _norm
 from invesha.sectors import get_sector
 from invesha.xlsx import (
     BOLD,
@@ -171,6 +174,25 @@ class Inputs:
         return self.cells[key]
 
 
+def settings_section(ins: Inputs, kind: str, values: dict[str, Any]) -> None:
+    """List every other model input so the workbook can be re-uploaded to the platform."""
+    lookup = _lookup(kind)
+    present = {
+        lookup[_norm(value)][0]
+        for (_row, col), (value, _style, _extra) in ins.sheet.cells.items()
+        if col == 1 and isinstance(value, str) and _norm(value) in lookup
+    }
+    rest = [spec for spec in fields(kind) if spec[0] not in present and values.get(spec[0]) is not None]
+    if not rest:
+        return
+    ins.section("Model settings (used when you re-upload this file to the platform)")
+    for spec in rest:
+        key, label, ftype = spec[0], spec[1], spec[2]
+        fmt = {"pct": "pct", "x": "x", "int": "int", "num": "num"}.get(ftype, "text")
+        value = _display(spec, values[key])
+        ins.add(f"set_{key}", label, value, fmt if not isinstance(value, str) else "text")
+
+
 # ---------------------------------------------------------------- company
 
 
@@ -222,6 +244,7 @@ def company_workbook(data: dict[str, Any]) -> bytes:
     ins.add("evebitda", "EV / EBITDA (mid)", sector.ev_ebitda[1], "x")
     ins.add("evrev", "EV / Revenue (mid)", sector.ev_revenue[1], "x")
     ins.add("pe", "P / E (mid)", sector.pe[1], "x")
+    settings_section(ins, "company", asdict(p))
 
     # Model sheet
     m = wb.add("Model")
@@ -469,6 +492,7 @@ def startup_workbook(data: dict[str, Any]) -> bytes:
     ins.add("mult", "Exit ARR multiple", p.exit_multiple or mid, "x")
     ins.add("ret", "VC target return (money multiple)", p.target_return, "x")
     ins.add("raise", "Round size being raised", p.raise_amount)
+    settings_section(ins, "startup", asdict(p))
 
     m = wb.add("Monthly model")
     m.freeze = (3, 1)
@@ -598,6 +622,7 @@ def project_workbook(data: dict[str, Any]) -> bytes:
     ins.add("debt", "Debt", r.debt, note="sculpted to the target DSCR, capped by gearing")
     ins.add("equity", "Equity", r.equity)
     ins.add("idc", "Interest during construction", r.idc)
+    settings_section(ins, "project", asdict(p))
 
     s = wb.add("Cash flow model")
     s.freeze = (3, 1)

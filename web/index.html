@@ -127,6 +127,53 @@
   .disclaimer { font-size: 12px; color: var(--muted); margin-top: 20px; }
   footer { text-align: center; color: var(--muted); font-size: 13px; }
   .hidden { display: none !important; }
+  /* ---------- auth */
+  .auth { position: relative; z-index: 1; min-height: 100vh; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; max-width: 1180px; margin: 0 auto; padding: 32px 20px; }
+  .auth-brand h1 { font: 700 clamp(34px, 5vw, 56px)/1.05 Inter, sans-serif; letter-spacing: -.04em; margin: 26px 0 0;
+    background: linear-gradient(180deg, #fff 35%, #ffd2bb); -webkit-background-clip: text; background-clip: text; color: transparent; animation: rise .8s both; }
+  .auth-brand > p { color: var(--muted); font-size: 16px; max-width: 46ch; margin: 16px 0 26px; animation: rise .8s .1s both; }
+  .feats { display: grid; gap: 12px; max-width: 470px; }
+  .feat { display: flex; gap: 14px; align-items: flex-start; padding: 13px 15px; border-radius: 14px; border: 1px solid var(--line-strong); background: rgba(20,20,24,.6); backdrop-filter: blur(8px); animation: rise .8s both; }
+  .feat:nth-child(2) { animation-delay: .1s; } .feat:nth-child(3) { animation-delay: .2s; } .feat:nth-child(4) { animation-delay: .3s; }
+  .feat .fi { width: 34px; height: 34px; flex: none; border-radius: 10px; display: grid; place-items: center; background: var(--accent-soft); font-size: 17px; }
+  .feat b { display: block; font-size: 14px; } .feat span { font-size: 13px; color: var(--muted); }
+  .auth-card { border-radius: 24px; padding: 30px; background: linear-gradient(160deg, rgba(44,44,52,.78), rgba(16,16,20,.88)); border: 1px solid var(--line-strong);
+    box-shadow: 0 40px 100px rgba(0,0,0,.55), 0 0 0 1px rgba(255,138,61,.08); backdrop-filter: blur(16px); animation: rise .8s .15s both; }
+  .auth-card h2 { margin: 0; font-size: 24px; letter-spacing: -.02em; } .auth-card .sub { color: var(--muted); margin: 6px 0 20px; font-size: 14px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 12px; background: rgba(0,0,0,.35); border: 1px solid var(--line); margin-bottom: 20px; }
+  .seg button { border: 0; background: none; color: var(--muted); font: 600 13.5px Inter; padding: 9px; border-radius: 9px; cursor: pointer; }
+  .seg button[aria-selected="true"] { background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: #fff; box-shadow: 0 4px 16px var(--glow); }
+  .auth-card form { display: grid; gap: 14px; }
+  .auth-card .row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); }
+  .auth-card .row label { flex-direction: row; align-items: center; gap: 8px; font-weight: 400; }
+  .auth-card .row input { width: auto; }
+  .auth-card .run { width: 100%; justify-content: center; padding: 13px; }
+  .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 12px; margin: 18px 0; } .or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line-strong); }
+  .guest { width: 100%; padding: 12px; }
+  .auth-msg { min-height: 20px; font-size: 13px; color: var(--bad); margin-top: 4px; }
+  .fine { font-size: 12px; color: var(--muted); margin: 18px 0 0; line-height: 1.5; }
+  .user { display: flex; align-items: center; gap: 8px; padding: 5px 6px 5px 5px; border-radius: 999px; border: 1px solid var(--line-strong); background: rgba(20,20,24,.72); font-size: 13px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: #fff; font-weight: 700; font-size: 12px; }
+  .user button { border: 0; background: rgba(255,255,255,.06); color: var(--muted); border-radius: 999px; padding: 5px 10px; font: 500 12px Inter; cursor: pointer; }
+  .user button:hover { color: var(--ink); background: var(--accent-soft); }
+  .right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  /* ---------- data source */
+  .sources { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; }
+  .src { border-radius: 18px; border: 1px solid var(--line-strong); padding: 20px; background: rgba(255,255,255,.03); display: flex; flex-direction: column; gap: 12px; }
+  .src h3 { margin: 0; font-size: 17px; display: flex; gap: 10px; align-items: center; } .src h3 i { font-style: normal; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: var(--accent-soft); }
+  .src p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .drop { border: 1.5px dashed rgba(255,138,61,.45); border-radius: 14px; padding: 26px 16px; text-align: center; cursor: pointer; background: rgba(255,90,31,.04); transition: background .2s, border-color .2s, transform .2s; }
+  .drop:hover, .drop.over { background: var(--accent-soft); border-color: var(--accent); transform: translateY(-1px); }
+  .drop .big { font-size: 28px; } .drop b { display: block; margin: 6px 0 2px; } .drop small { color: var(--muted); }
+  .fmt { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-top: 10px; } .fmt span { font: 600 11px "JetBrains Mono"; padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,.06); color: #ddd; }
+  .choice { text-align: left; cursor: pointer; border: 1px solid var(--line-strong); background: rgba(255,255,255,.03); color: var(--ink); border-radius: 14px; padding: 14px 16px; font: inherit; display: flex; gap: 12px; align-items: center; transition: border-color .2s, background .2s, transform .2s; }
+  .choice:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-1px); }
+  .choice b { display: block; font-size: 14px; } .choice span { font-size: 12.5px; color: var(--muted); }
+  .choice .ar { margin-left: auto; color: var(--accent-2); font-size: 18px; }
+  input.missing, select.missing, textarea.missing { border-color: var(--bad); box-shadow: 0 0 0 3px var(--bad-soft); }
+  .loaded { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-radius: 12px; background: var(--good-soft); color: var(--good); font-size: 13.5px; margin-bottom: 16px; }
+  .formhead { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+  @media (max-width: 900px) { .auth { grid-template-columns: 1fr; gap: 26px; padding-top: 28px; } .auth-brand .feats { display: none; } .sources { grid-template-columns: 1fr; } }
   @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } .modes { grid-template-columns: 1fr; } .chip { display: none; } .pillnav { order: 3; width: 100%; justify-content: center; } }
   @media (max-width: 640px) { .panel { padding: 16px; border-radius: 18px; } .hero { padding: 50px 0 26px; } }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
@@ -135,20 +182,57 @@
 </head>
 <body>
 <div class="aura" aria-hidden="true"><div class="swirl"></div></div>
-<div class="wrap">
+<main class="auth" id="auth">
+  <div class="auth-brand">
+    <a class="brand" href="#"><span class="logo">I</span>Invesha</a>
+    <h1>Your Investment Banker, Automated.</h1>
+    <p>Sign in to build company valuations, project finance and startup models in minutes, with investment suggestions and a live Excel model to download.</p>
+    <div class="feats">
+      <div class="feat"><div class="fi">📤</div><div><b>Upload or fill in</b><span>Drop an Excel, CSV or JSON file, or type the numbers in.</span></div></div>
+      <div class="feat"><div class="fi">📊</div><div><b>Full model, every chart</b><span>DCF, comps, LBO, DSCR, runway, football field, sensitivities.</span></div></div>
+      <div class="feat"><div class="fi">💡</div><div><b>Investment suggestions</b><span>Buy / Hold / Reduce, deal routes, risks and what to fix first.</span></div></div>
+      <div class="feat"><div class="fi">⬇️</div><div><b>Download to Excel</b><span>A live, formula-driven workbook you can keep working in.</span></div></div>
+    </div>
+  </div>
+  <div class="auth-card">
+    <h2 id="auth-title">Welcome back</h2>
+    <p class="sub" id="auth-sub">Sign in to continue to AutoModel.</p>
+    <div class="seg" role="tablist">
+      <button type="button" role="tab" id="tab-in" aria-selected="true">Sign in</button>
+      <button type="button" role="tab" id="tab-up" aria-selected="false">Create account</button>
+    </div>
+    <form id="auth-form" novalidate>
+      <label id="name-row" class="hidden">Full name<input id="a-name" type="text" autocomplete="name" placeholder="Anshuman Tewary"></label>
+      <label>Email<input id="a-email" type="email" autocomplete="email" placeholder="you@company.com" required></label>
+      <label>Password<input id="a-pass" type="password" autocomplete="current-password" placeholder="At least 8 characters" required></label>
+      <label id="confirm-row" class="hidden">Confirm password<input id="a-pass2" type="password" autocomplete="new-password"></label>
+      <div class="row"><label><input type="checkbox" id="a-remember" checked> Keep me signed in</label><span id="auth-hint"></span></div>
+      <button class="run" type="submit" id="auth-submit">Sign in →</button>
+      <div class="auth-msg" id="auth-msg" aria-live="polite"></div>
+    </form>
+    <div class="or">or</div>
+    <button class="btn guest" type="button" id="guest">Continue as guest</button>
+    <p class="fine">Accounts are kept on this device only: your password is stored as a salted hash and never sent anywhere, and your models never leave your browser.</p>
+  </div>
+</main>
+
+<div class="wrap hidden" id="app">
   <header class="topbar">
     <a class="brand" href="#top"><span class="logo">I</span>Invesha</a>
     <nav class="pillnav" aria-label="Sections">
-      <a href="#models">Models</a><a href="#inputs">Inputs</a><a href="#report">Report</a>
+      <a href="#models">Models</a><a href="#source">Data</a><a href="#report">Report</a>
       <a href="https://github.com/anshumantewary-pm/Invesha-The-Investment-Banker-">GitHub</a>
     </nav>
-    <span class="status"><span class="dot" id="dot"></span><span id="status">Loading engine…</span></span>
+    <div class="right">
+      <span class="status"><span class="dot" id="dot"></span><span id="status">Loading engine…</span></span>
+      <span class="user"><span class="avatar" id="avatar">G</span><span id="user-name">Guest</span><button type="button" id="signout">Sign out</button></span>
+    </div>
   </header>
 
   <section class="hero" id="top">
     <span class="chip c1"><b>DCF</b> · WACC</span><span class="chip c2"><b>LBO</b> · IRR</span>
     <span class="chip c3"><b>DSCR</b> · LLCR</span><span class="chip c4"><b>Runway</b> · LTV/CAC</span>
-    <h1>Company In. Financial Model Out.</h1>
+    <h1 id="hello">Company In. Financial Model Out.</h1>
     <p>AutoModel builds the full model for investment banking and corporate finance: projections, DCF, comparables, LBO, project finance and startup models, with an investment view, suggestions and a live Excel model to download.</p>
     <a class="cta" href="#models">Build a model <span>→</span></a>
   </section>
@@ -159,15 +243,43 @@
     <button class="mode" role="tab" data-kind="startup"><div class="ic">🚀</div><h3>Startup model</h3><p>Monthly customers, MRR, burn, runway, break-even, unit economics, VC-method valuation and fundraising plan.</p></button>
   </section>
 
-  <section class="panel" id="inputs">
-    <h2 id="form-title">Inputs</h2>
-    <p class="blurb" id="form-blurb"></p>
-    <div class="actions no-print" style="margin:0 0 16px">
-      <button class="btn" type="button" id="example">Load example</button>
-      <button class="btn" type="button" id="upload-btn">Upload inputs (JSON)</button>
-      <input type="file" id="upload" accept=".json,application/json" class="hidden">
-      <button class="btn" type="button" id="save-inputs">Save inputs</button>
+  <section class="panel hidden" id="source">
+    <h2 id="source-title">How would you like to add your data?</h2>
+    <p class="blurb" id="source-blurb">Upload a file you already have, or fill in the numbers yourself. You can review and edit everything before building the model.</p>
+    <div class="sources">
+      <div class="src">
+        <h3><i>📤</i>Upload your data</h3>
+        <p>Excel, CSV or JSON. Use our template, a simple two-column sheet (field, value), or an Invesha Excel model you downloaded earlier.</p>
+        <div class="drop" id="drop" role="button" tabindex="0" aria-label="Upload a data file">
+          <div class="big">⇪</div><b>Drop your file here or click to browse</b><small>We read it in your browser; nothing is uploaded to a server.</small>
+          <div class="fmt"><span>.XLSX</span><span>.CSV</span><span>.JSON</span></div>
+        </div>
+        <input type="file" id="upload" accept=".xlsx,.xlsm,.csv,.txt,.json" class="hidden">
+        <div class="actions" style="margin:0">
+          <button class="btn" type="button" id="tpl-xlsx">⬇ Excel template</button>
+          <button class="btn" type="button" id="tpl-csv">⬇ CSV template</button>
+        </div>
+      </div>
+      <div class="src">
+        <h3><i>✍️</i>Fill in manually</h3>
+        <p>Type the numbers into a guided form. Helpful defaults are pre-filled for the assumptions.</p>
+        <button class="choice" type="button" id="start-blank"><div><b>Start with a blank form</b><span>Enter your company's figures</span></div><span class="ar">→</span></button>
+        <button class="choice" type="button" id="start-example"><div><b>Start from a worked example</b><span>See how it works, then edit</span></div><span class="ar">→</span></button>
+        <button class="choice hidden" type="button" id="start-last"><div><b>Continue where you left off</b><span id="last-note">Your last inputs for this model</span></div><span class="ar">→</span></button>
+      </div>
     </div>
+    <div class="msg" id="source-msg" aria-live="polite" style="margin-top:12px"></div>
+  </section>
+
+  <section class="panel hidden" id="inputs">
+    <div class="formhead">
+      <div><h2 id="form-title">Inputs</h2><p class="blurb" id="form-blurb"></p></div>
+      <div class="actions no-print" style="margin:0">
+        <button class="btn" type="button" id="change-source">← Change data source</button>
+        <button class="btn" type="button" id="save-inputs">Save inputs</button>
+      </div>
+    </div>
+    <div class="loaded hidden" id="loaded"></div>
     <form id="form" novalidate></form>
     <div class="actions">
       <button class="run" type="button" id="run" disabled>Build model →</button>
@@ -184,33 +296,9 @@
 <script>
 const PAL = ["#ff7a30", "#ffd23f", "#4fd1a1", "#b392f0", "#00dfd8", "#ff4d6d", "#7aa2ff"];
 const CUR = [["₹", "₹ INR"], ["$", "$ USD"], ["€", "€ EUR"], ["£", "£ GBP"], ["", "None"]];
-// [key, label, type, hint]; type: text | num | int | pct | x | sector | currency | select:a,b | list | rounds
-const FORMS = {
-  company: { title: "Company valuation", blurb: "Last year's figures plus a few assumptions. Percentages in %. All amounts in one unit (e.g. ₹ crore).", groups: [
-    ["Company", [["name","Company name","text"],["sector","Sector","sector"],["currency","Currency","currency"],["unit","Amount unit","text","e.g. Cr, Mn"],["years","Projection years","int"]]],
-    ["Last financial year", [["revenue","Revenue","num"],["ebitda_margin","EBITDA margin","pct"]]],
-    ["Growth and margins", [["growth_start","Revenue growth, year 1","pct"],["growth_end","Revenue growth, final year","pct","fades linearly"],["growth","Or growth per year","list","comma-separated %, overrides the fade"],["margin_target","EBITDA margin, final year","pct","fades from today"]]],
-    ["Operations", [["da_pct","D&A, % of revenue","pct"],["capex_pct","Capex, % of revenue","pct"],["nwc_pct","Working capital, % of revenue","pct"],["tax_rate","Tax rate","pct"]]],
-    ["Balance sheet and market", [["debt","Debt","num"],["cash","Cash","num"],["interest_rate","Cost of debt (pre-tax)","pct"],["shares","Shares outstanding","num","same unit basis as amounts"],["share_price","Share price","num","for Buy / Hold / Reduce"],["invested_capital","Invested capital","num","optional, for ROIC"]]],
-    ["Cost of capital", [["risk_free","Risk-free rate","pct"],["equity_risk_premium","Equity risk premium","pct"],["beta","Levered beta","num","blank = sector beta relevered"],["size_premium","Size / specific premium","pct"],["debt_weight","Target debt weight D/(D+E)","pct","blank = from market cap"]]],
-    ["Terminal value and LBO", [["terminal_growth","Terminal growth","pct"],["exit_multiple","Exit EV/EBITDA","x","blank = sector mid"],["lbo_entry_multiple","LBO entry EV/EBITDA","x","blank = sector mid"],["lbo_leverage","LBO leverage (debt / EBITDA)","x"],["lbo_interest_rate","LBO interest rate","pct"]]],
-  ]},
-  project: { title: "Project finance", blurb: "An asset with a build period and years of operating cash flow: solar, wind, roads, plants, real estate. Percentages in %.", groups: [
-    ["Project", [["name","Project name","text"],["currency","Currency","currency"],["unit","Amount unit","text"]]],
-    ["Asset and revenue", [["capex","Capex","num"],["construction_years","Construction years","int"],["operating_years","Operating years","int"],["capacity","Capacity per year at 100%","num","units sold (MWh, tonnes…)"],["utilisation","Utilisation / PLF","pct"],["price","Price per unit (year 1)","num","in amount unit per capacity unit"],["price_escalation","Price escalation / year","pct"]]],
-    ["Costs and tax", [["opex_fixed","Fixed opex / year","num"],["opex_variable","Variable opex / unit","num"],["opex_escalation","Opex escalation / year","pct"],["tax_rate","Tax rate","pct"],["depreciation_years","Depreciation years","int","blank = operating years"]]],
-    ["Financing", [["gearing","Maximum gearing","pct"],["debt_rate","Debt interest rate","pct"],["tenor","Debt tenor (years)","int"],["repayment","Repayment","select:sculpted,annuity"],["target_dscr","Target DSCR","x"]]],
-    ["Returns", [["discount_rate","Project discount rate","pct"],["cost_of_equity","Equity hurdle (cost of equity)","pct"],["terminal_value","Residual value at end","num"]]],
-  ]},
-  startup: { title: "Startup model", blurb: "Monthly model from customers to cash. Amounts in one unit (e.g. ₹ lakh). Percentages in %.", groups: [
-    ["Startup", [["name","Startup name","text"],["sector","Sector","sector"],["currency","Currency","currency"],["unit","Amount unit","text","e.g. L, K"],["months","Months to model","int"]]],
-    ["Customers", [["starting_customers","Customers today","num"],["new_customers","New customers in month 1","num"],["new_customer_growth","Growth in new customers / month","pct"],["churn","Monthly churn","pct"]]],
-    ["Pricing and costs", [["arpu","Revenue per customer / month","num"],["arpu_growth","Price increase / year","pct"],["gross_margin","Gross margin","pct"],["cac","Cost to acquire a customer","num"],["fixed_costs","Team & overheads / month","num"],["fixed_cost_growth","Growth in team & overheads / month","pct"]]],
-    ["Cash and fundraising", [["cash","Cash today","num"],["funding","Planned funding","rounds","one per line: month=amount"],["raise_amount","Round being raised now","num","for pre-money and dilution"],["exit_multiple","Exit ARR multiple","x","blank = sector mid"],["target_return","VC target return","x"]]],
-  ]},
-};
+let FORMS = {}, DEFAULTS = {}, REQUIRED = {};  // field definitions come from the engine (invesha.fields)
 const $ = id => document.getElementById(id);
-let py = null, kind = "company", sectors = [], examples = {}, lastReport = null, lastInputs = null;
+let py = null, kind = null, sectors = [], examples = {}, lastReport = null, lastInputs = null, user = null;
 
 function setStatus(t, s) { $("status").textContent = t; $("dot").className = "dot" + (s ? " " + s : ""); }
 function msg(t, e) { $("msg").textContent = t; $("msg").className = "msg" + (e ? " error" : ""); }
@@ -253,7 +341,7 @@ function buildForm() {
       else if (type === "rounds") input = el("textarea", { id: "f_" + key, placeholder: "14=1500" });
       else input = el("input", { id: "f_" + key, type: type === "text" || type === "list" ? "text" : "number", step: "any", inputmode: type === "text" ? null : "decimal" });
       grid.append(el("label", { class: type === "rounds" || type === "list" ? "wide" : null }, [
-        document.createTextNode(label + (type === "pct" ? " (%)" : "")), hint ? el("small", { text: hint }) : null, input]));
+        document.createTextNode(label + (type === "pct" ? " (%)" : "") + ((REQUIRED[kind] || []).includes(key) ? " *" : "")), hint ? el("small", { text: hint }) : null, input]));
     }
     form.append(el("div", { class: "group" }, [el("div", { text: title }), grid]));
   }
@@ -292,16 +380,57 @@ function read() {
     out[key] = type === "pct" ? n / 100 : type === "int" ? Math.round(n) : n;
   }
   if (out.currency === undefined && $("f_currency")) out.currency = $("f_currency").value;
+  const missing = (REQUIRED[kind] || []).filter(k => out[k] === undefined);
+  for (const [key] of fields()) $("f_" + key).classList.toggle("missing", missing.includes(key));
+  if (missing.length) {
+    const labels = fields().filter(f => missing.includes(f[0])).map(f => f[1]);
+    $("f_" + missing[0]).focus();
+    throw new Error(`Please fill in: ${labels.join(", ")}.`);
+  }
   return out;
 }
 
-function selectKind(k, load = true) {
+function selectKind(k) {
   kind = k;
   for (const b of document.querySelectorAll(".mode")) b.setAttribute("aria-selected", String(b.dataset.kind === k));
-  if (load && examples[k]) fill(examples[k]); else buildForm();
-  $("report").classList.add("hidden"); msg("");
+  const spec = FORMS[k];
+  $("source-title").textContent = `${spec.title}: how would you like to add your data?`;
+  $("source").classList.remove("hidden"); $("inputs").classList.add("hidden"); $("report").classList.add("hidden");
+  $("source-msg").textContent = ""; $("source-msg").className = "msg"; msg("");
+  const last = loadLast(k);
+  $("start-last").classList.toggle("hidden", !last);
+  if (last) $("last-note").textContent = `${last.inputs.name || spec.title} · saved ${new Date(last.at).toLocaleString()}`;
   try { localStorage.setItem("invesha-kind", k); } catch (_) {}
 }
+
+function openForm(data, banner) {
+  fill(data);
+  $("loaded").classList.toggle("hidden", !banner);
+  if (banner) $("loaded").textContent = banner;
+  $("source").classList.add("hidden"); $("inputs").classList.remove("hidden"); $("report").classList.add("hidden");
+  msg(""); $("inputs").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function srcMsg(t, e) { $("source-msg").textContent = t; $("source-msg").className = "msg" + (e ? " error" : ""); }
+
+async function uploadFile(f) {
+  if (!f) return;
+  if (!py) { srcMsg("The engine is still loading; try again in a moment.", true); return; }
+  if (f.size > 5e6) { srcMsg("That file is over 5 MB; upload just the inputs sheet.", true); return; }
+  try {
+    const buf = new Uint8Array(await f.arrayBuffer());
+    let bin = ""; for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+    const res = call("parse", kind, f.name, btoa(bin));
+    const ignored = res.ignored.length ? ` Ignored ${res.ignored.length} unrecognised row${res.ignored.length > 1 ? "s" : ""} (${res.ignored.slice(0, 3).join(", ")}${res.ignored.length > 3 ? "…" : ""}).` : "";
+    openForm({ ...DEFAULTS[kind], ...res.inputs }, `✓ Loaded ${res.matched} field${res.matched > 1 ? "s" : ""} from ${f.name}. Review them below, then build the model.${ignored}`);
+  } catch (e) { srcMsg(e.message, true); }
+}
+
+// ------------------------------------------------------------ per-user storage
+function store() { try { return window.localStorage; } catch (_) { return null; } }
+function userKey(k) { return `invesha-last-${user && user.email ? user.email : "guest"}-${k}`; }
+function saveLast(k, inputs) { try { store()?.setItem(userKey(k), JSON.stringify({ at: Date.now(), inputs })); } catch (_) {} }
+function loadLast(k) { try { return JSON.parse(store()?.getItem(userKey(k)) || "null"); } catch (_) { return null; } }
 
 // ------------------------------------------------------------ run
 function call(fn, ...args) { const r = JSON.parse(py[fn](...args)); if (!r.ok) throw new Error(r.error); return r.result; }
@@ -312,7 +441,7 @@ function build() {
   try { inputs = read(); } catch (e) { msg(e.message, true); return; }
   try {
     const t0 = performance.now();
-    lastReport = call("run", kind, JSON.stringify(inputs)); lastInputs = inputs;
+    lastReport = call("run", kind, JSON.stringify(inputs)); lastInputs = inputs; saveLast(kind, inputs);
     msg(`Model built in ${Math.round(performance.now() - t0)} ms.`);
     render(lastReport);
   } catch (e) { msg(e.message, true); }
@@ -515,7 +644,12 @@ function donut(box, c) {
 // ------------------------------------------------------------ boot
 const GLUE = `
 import base64, json, math
-from invesha import cli, excel
+from dataclasses import MISSING, fields as dc_fields
+from invesha import cli, excel, inputs_io
+from invesha.corporate import CompanyInputs
+from invesha.fields import FORMS
+from invesha.project import ProjectInputs
+from invesha.startup import StartupInputs
 from invesha.core import InputError
 from invesha.examples import EXAMPLES
 from invesha.sectors import SECTORS
@@ -535,8 +669,26 @@ def wrap(fn):
     except (InputError, ValueError, TypeError, ZeroDivisionError) as exc:
         return json.dumps({"ok": False, "error": str(exc)})
 
+def required(cls):
+    return [f.name for f in dc_fields(cls) if f.default is MISSING and f.default_factory is MISSING]
+
+def defaults(cls):
+    return {f.name: f.default for f in dc_fields(cls) if f.default is not MISSING and f.default is not None}
+
 def meta():
-    return wrap(lambda: {"sectors": [[k, s.name] for k, s in SECTORS.items()], "examples": EXAMPLES})
+    return wrap(lambda: {"sectors": [[k, s.name] for k, s in SECTORS.items()], "examples": EXAMPLES, "forms": FORMS,
+                         "defaults": {"company": defaults(CompanyInputs), "project": defaults(ProjectInputs),
+                                      "startup": defaults(StartupInputs)},
+                         "required": {"company": required(CompanyInputs), "project": required(ProjectInputs),
+                                      "startup": required(StartupInputs)}})
+
+def parse(kind, filename, b64):
+    return wrap(lambda: inputs_io.parse_file(kind, filename, base64.b64decode(b64)))
+
+def template(kind, fmt):
+    if fmt == "csv":
+        return wrap(lambda: inputs_io.template_csv(kind))
+    return wrap(lambda: base64.b64encode(inputs_io.template_xlsx(kind)).decode())
 
 def run(kind, data):
     return wrap(lambda: cli.run(kind, json.loads(data)).to_dict())
@@ -544,7 +696,7 @@ def run(kind, data):
 def xlsx(kind, data):
     return wrap(lambda: base64.b64encode(excel.build(kind, json.loads(data))).decode())
 
-{"meta": meta, "run": run, "xlsx": xlsx}
+{"meta": meta, "run": run, "xlsx": xlsx, "parse": parse, "template": template}
 `;
 async function boot() {
   try {
@@ -553,24 +705,108 @@ async function boot() {
     await pyodide.loadPackage("micropip");
     await pyodide.pyimport("micropip").install(new URL(manifest.wheel, location.href).href);
     py = pyodide.runPython(GLUE).toJs({ dict_converter: Object.fromEntries });
-    const m = call("meta"); sectors = m.sectors; examples = m.examples;
-    let start = "company"; try { start = localStorage.getItem("invesha-kind") || start; } catch (_) {}
-    selectKind(FORMS[start] ? start : "company");
+    const m = call("meta"); sectors = m.sectors; examples = m.examples; FORMS = m.forms; DEFAULTS = m.defaults; REQUIRED = m.required;
     $("run").disabled = false;
     setStatus(`Engine ${manifest.version} ready`, "ready");
-  } catch (e) { console.error(e); setStatus("Engine failed to load", "fail"); msg("Could not load the engine: " + e.message, true); }
+    if (pendingKind) { selectKind(pendingKind); pendingKind = null; }
+  } catch (e) { console.error(e); setStatus("Engine failed to load", "fail"); srcMsg("Could not load the engine: " + e.message, true); }
 }
-for (const b of document.querySelectorAll(".mode")) b.addEventListener("click", () => { selectKind(b.dataset.kind); $("inputs").scrollIntoView({ behavior: "smooth" }); });
+
+// ------------------------------------------------------------ auth (device-local accounts)
+const USERS = "invesha-users", SESSION = "invesha-session";
+let mode = "in", pendingKind = null;
+async function hash(salt, password) {
+  const data = new TextEncoder().encode(salt + ":" + password);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(digest)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+function users() { try { return JSON.parse(store()?.getItem(USERS) || "{}"); } catch (_) { return {}; } }
+function authMsg(t) { $("auth-msg").textContent = t; }
+function setMode(m) {
+  mode = m;
+  $("tab-in").setAttribute("aria-selected", String(m === "in")); $("tab-up").setAttribute("aria-selected", String(m === "up"));
+  $("name-row").classList.toggle("hidden", m === "in"); $("confirm-row").classList.toggle("hidden", m === "in");
+  $("auth-title").textContent = m === "in" ? "Welcome back" : "Create your account";
+  $("auth-sub").textContent = m === "in" ? "Sign in to continue to AutoModel." : "It takes ten seconds. Your data stays on this device.";
+  $("auth-submit").textContent = m === "in" ? "Sign in →" : "Create account →";
+  $("a-pass").setAttribute("autocomplete", m === "in" ? "current-password" : "new-password");
+  authMsg("");
+}
+function startSession(u, remember) {
+  user = u;
+  const raw = JSON.stringify(u);
+  try { (remember ? localStorage : sessionStorage).setItem(SESSION, raw); } catch (_) {}
+  enterApp();
+}
+function enterApp() {
+  $("auth").classList.add("hidden"); $("app").classList.remove("hidden");
+  const name = user.name || "Guest";
+  $("user-name").textContent = name; $("avatar").textContent = name.trim().slice(0, 1).toUpperCase() || "G";
+  $("hello").textContent = user.email ? `Welcome, ${name.split(" ")[0]}. Company In, Model Out.` : "Company In. Financial Model Out.";
+  window.scrollTo({ top: 0 });
+}
+function signOut() {
+  try { localStorage.removeItem(SESSION); sessionStorage.removeItem(SESSION); } catch (_) {}
+  user = null; $("app").classList.add("hidden"); $("auth").classList.remove("hidden");
+  $("auth-form").reset(); setMode("in"); window.scrollTo({ top: 0 });
+}
+$("tab-in").addEventListener("click", () => setMode("in"));
+$("tab-up").addEventListener("click", () => setMode("up"));
+$("auth-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const email = $("a-email").value.trim().toLowerCase(), pass = $("a-pass").value, remember = $("a-remember").checked;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return authMsg("Enter a valid email address.");
+  if (!crypto.subtle) return authMsg("Sign-in needs a secure (https) page. Use 'Continue as guest'.");
+  const all = users();
+  if (mode === "up") {
+    const name = $("a-name").value.trim();
+    if (!name) return authMsg("Enter your name.");
+    if (pass.length < 8) return authMsg("Use at least 8 characters for the password.");
+    if (pass !== $("a-pass2").value) return authMsg("The passwords do not match.");
+    if (all[email]) return authMsg("An account with this email already exists on this device. Sign in instead.");
+    const salt = [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, "0")).join("");
+    all[email] = { name, salt, hash: await hash(salt, pass), created: Date.now() };
+    try { store().setItem(USERS, JSON.stringify(all)); } catch (_) { return authMsg("This browser is blocking storage; use 'Continue as guest'."); }
+    startSession({ email, name }, remember);
+  } else {
+    const rec = all[email];
+    if (!rec || rec.hash !== await hash(rec.salt, pass)) return authMsg("Email or password is incorrect.");
+    startSession({ email, name: rec.name }, remember);
+  }
+});
+$("guest").addEventListener("click", () => startSession({ email: null, name: "Guest" }, false));
+$("signout").addEventListener("click", signOut);
+
+// ------------------------------------------------------------ app events
+for (const b of document.querySelectorAll(".mode")) b.addEventListener("click", () => {
+  if (!py) { pendingKind = b.dataset.kind; for (const x of document.querySelectorAll(".mode")) x.setAttribute("aria-selected", String(x === b));
+    $("source").classList.remove("hidden"); srcMsg("Loading the engine… this takes a few seconds on first visit."); }
+  else selectKind(b.dataset.kind);
+  $("source").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+document.querySelector('.cta').addEventListener("click", e => { e.preventDefault(); $("models").scrollIntoView({ behavior: "smooth" }); });
 $("run").addEventListener("click", build);
 $("form").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); build(); } });
-$("example").addEventListener("click", () => { fill(examples[kind]); msg("Example loaded. Edit anything, then Build model."); });
-$("upload-btn").addEventListener("click", () => $("upload").click());
-$("upload").addEventListener("change", async e => {
-  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
-  try { const d = JSON.parse(await f.text()); fill(d.inputs || d); msg(`Loaded inputs from ${f.name}.`); } catch (err) { msg("Not a valid inputs file: " + err.message, true); }
+$("start-blank").addEventListener("click", () => openForm({ ...DEFAULTS[kind], name: "" }, ""));
+$("start-example").addEventListener("click", () => openForm(examples[kind], "Worked example loaded: edit anything, then build the model."));
+$("start-last").addEventListener("click", () => { const l = loadLast(kind); if (l) openForm(l.inputs, "Your last inputs are loaded."); });
+$("change-source").addEventListener("click", () => selectKind(kind));
+const drop = $("drop");
+drop.addEventListener("click", () => $("upload").click());
+drop.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("upload").click(); } });
+for (const ev of ["dragenter", "dragover"]) drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); });
+for (const ev of ["dragleave", "drop"]) drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); });
+drop.addEventListener("drop", e => uploadFile(e.dataTransfer.files[0]));
+$("upload").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; uploadFile(f); });
+$("tpl-xlsx").addEventListener("click", () => {
+  try { const b64 = call("template", kind, "xlsx"); const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    download(`invesha-${kind}-template.xlsx`, new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })); } catch (e) { srcMsg(e.message, true); }
 });
+$("tpl-csv").addEventListener("click", () => { try { download(`invesha-${kind}-template.csv`, new Blob([call("template", kind, "csv")], { type: "text/csv" })); } catch (e) { srcMsg(e.message, true); } });
 $("save-inputs").addEventListener("click", () => { try { const d = read(); download(`${(d.name || kind).replace(/[^\w]+/g, "-")}-inputs.json`, new Blob([JSON.stringify(d, null, 2)], { type: "application/json" })); } catch (e) { msg(e.message, true); } });
-buildForm();
+
+// Restore a remembered session, otherwise show the login page.
+try { const saved = localStorage.getItem(SESSION) || sessionStorage.getItem(SESSION); if (saved) { user = JSON.parse(saved); enterApp(); } } catch (_) {}
 boot();
 </script>
 </body>
