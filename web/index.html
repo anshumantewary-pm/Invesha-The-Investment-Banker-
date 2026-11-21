@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invesha AutoModel</title>
+<meta name="description" content="Company in, financial model and valuation out. DCF, comparables, LBO, project finance and startup models with investment suggestions and Excel download.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07070a; --ink: #f4f2ee; --muted: #9b98a3; --line: rgba(255,255,255,.09); --line-strong: rgba(255,255,255,.16);
+    --accent: #ff5a1f; --accent-2: #ff8a3d; --accent-soft: rgba(255,90,31,.14); --glow: rgba(255,80,20,.5);
+    --good: #4fd1a1; --good-soft: rgba(79,209,161,.13); --warn: #f5b340; --warn-soft: rgba(245,179,64,.14);
+    --bad: #ff6b5a; --bad-soft: rgba(255,107,90,.14);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 Inter, system-ui, sans-serif; overflow-x: hidden; }
+  a { color: var(--accent-2); }
+  .aura { position: absolute; left: 0; right: 0; top: 0; height: 1300px; pointer-events: none; overflow: hidden; z-index: 0; }
+  .aura::before { content: ""; position: absolute; left: 50%; top: -430px; width: 1100px; height: 1100px; transform: translateX(-50%);
+    background: radial-gradient(closest-side, transparent 52%, rgba(255,90,31,.5) 60%, rgba(255,60,10,.16) 68%, transparent 74%), radial-gradient(closest-side, rgba(255,110,40,.25), transparent 70%);
+    filter: blur(18px); animation: breathe 9s ease-in-out infinite; }
+  .swirl { position: absolute; left: 50%; top: -370px; width: 980px; height: 980px; transform: translateX(-50%); border-radius: 50%;
+    background: conic-gradient(from 200deg, transparent 0 18%, rgba(255,120,50,.5) 26%, transparent 34%, transparent 52%, rgba(255,70,20,.45) 62%, transparent 72%);
+    -webkit-mask: radial-gradient(closest-side, transparent 58%, #000 62%, #000 70%, transparent 74%); mask: radial-gradient(closest-side, transparent 58%, #000 62%, #000 70%, transparent 74%);
+    filter: blur(6px); animation: spin 40s linear infinite; }
+  @keyframes spin { to { transform: translateX(-50%) rotate(360deg); } }
+  @keyframes breathe { 50% { opacity: .75; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  @keyframes float { 50% { transform: translateY(-9px); } }
+  @keyframes pulse { 50% { opacity: .35; } }
+  .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 22px 16px 60px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; color: var(--ink); text-decoration: none; letter-spacing: -.01em; }
+  .logo { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent-2), var(--accent)); box-shadow: 0 0 18px var(--glow); color: #fff; font-weight: 800; }
+  .pillnav { display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: rgba(20,20,24,.72); border: 1px solid var(--line-strong); backdrop-filter: blur(10px); }
+  .pillnav a { padding: 7px 15px; border-radius: 999px; color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; }
+  .pillnav a:hover { color: var(--ink); }
+  .status { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-strong); background: rgba(20,20,24,.72); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); box-shadow: 0 0 10px var(--warn); animation: pulse 1.4s infinite; }
+  .dot.ready { background: var(--good); box-shadow: 0 0 10px var(--good); animation: none; }
+  .dot.fail { background: var(--bad); animation: none; }
+  .hero { text-align: center; padding: 80px 0 40px; position: relative; }
+  .hero h1 { font: 700 clamp(34px, 6vw, 62px)/1.05 Inter, sans-serif; letter-spacing: -.04em; margin: 0 auto; max-width: 16ch;
+    background: linear-gradient(180deg, #fff 35%, #ffd2bb); -webkit-background-clip: text; background-clip: text; color: transparent; animation: rise .8s both; }
+  .hero p { color: var(--muted); max-width: 62ch; margin: 18px auto 28px; font-size: 16px; animation: rise .8s .1s both; }
+  .chip { position: absolute; padding: 7px 14px; border-radius: 999px; font-size: 13px; color: #ddd; background: rgba(20,20,24,.75); border: 1px solid var(--line-strong); animation: float 6s ease-in-out infinite; }
+  .chip b { color: var(--accent-2); font-weight: 600; }
+  .chip.c1 { left: 0; top: 64px; } .chip.c2 { left: 4%; top: 150px; animation-delay: -2s; } .chip.c3 { right: 0; top: 64px; animation-delay: -1s; } .chip.c4 { right: 4%; top: 150px; animation-delay: -3s; }
+  .cta { display: inline-flex; align-items: center; gap: 10px; border: 0; cursor: pointer; text-decoration: none; color: #fff; font: 600 14px Inter; padding: 12px 14px 12px 22px; border-radius: 12px;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent)); box-shadow: 0 8px 30px var(--glow), inset 0 1px 0 rgba(255,255,255,.3); animation: rise .8s .2s both; transition: transform .15s; }
+  .cta:hover { transform: translateY(-2px); }
+  .cta span { width: 22px; height: 22px; border-radius: 6px; background: #fff; color: var(--accent); display: grid; place-items: center; }
+  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 30px 0 44px; }
+  .mode { text-align: left; cursor: pointer; border-radius: 18px; padding: 20px; border: 1px solid var(--line-strong); color: var(--ink); font: inherit;
+    background: linear-gradient(160deg, rgba(48,48,56,.7), rgba(18,18,22,.85)); transition: transform .2s, border-color .2s, box-shadow .2s; animation: rise .8s both; }
+  .mode:hover { transform: translateY(-3px); border-color: rgba(255,138,61,.5); }
+  .mode[aria-selected="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 20px 50px rgba(255,80,20,.18); }
+  .mode .ic { font-size: 22px; } .mode h3 { margin: 8px 0 4px; font-size: 17px; letter-spacing: -.01em; } .mode p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .panel { position: relative; background: linear-gradient(160deg, rgba(40,40,48,.68), rgba(16,16,20,.82)); border: 1px solid var(--line-strong); border-radius: 22px; padding: 26px; margin-bottom: 22px; backdrop-filter: blur(14px); box-shadow: 0 30px 80px rgba(0,0,0,.45); min-width: 0; }
+  .panel h2 { margin: 0 0 4px; font-size: 22px; letter-spacing: -.02em; }
+  .blurb { color: var(--muted); margin: 0 0 18px; }
+  .group { margin: 0 0 16px; } .group > div:first-child { font-size: 11.5px; font-weight: 600; color: var(--accent-2); text-transform: uppercase; letter-spacing: .12em; margin-bottom: 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 12px 14px; }
+  label { display: flex; flex-direction: column; gap: 5px; font-size: 13px; font-weight: 500; }
+  label small { color: var(--muted); font-weight: 400; }
+  label.wide { grid-column: 1 / -1; }
+  input, select, textarea { font: 14px "JetBrains Mono", monospace; color: var(--ink); background: rgba(0,0,0,.35); border: 1px solid var(--line-strong); border-radius: 10px; padding: 9px 11px; width: 100%; }
+  textarea { min-height: 70px; resize: vertical; }
+  select option { background: #16161b; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+  .run { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: #fff; border: 0; border-radius: 12px; padding: 12px 22px; font: 600 14px Inter; cursor: pointer; box-shadow: 0 8px 28px var(--glow), inset 0 1px 0 rgba(255,255,255,.3); }
+  .run:disabled { opacity: .45; cursor: wait; box-shadow: none; }
+  .btn { border: 1px solid var(--line-strong); background: rgba(255,255,255,.04); color: var(--ink); border-radius: 10px; padding: 9px 14px; font: 500 13.5px Inter; cursor: pointer; }
+  .btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .btn.xl { background: rgba(79,209,161,.1); border-color: rgba(79,209,161,.45); color: var(--good); font-weight: 600; }
+  .msg { font-size: 13px; color: var(--muted); } .msg.error { color: var(--bad); }
+  #report:not(.hidden) { animation: rise .5s both; }
+  .verdict { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; padding: 18px 20px; border-radius: 16px; border: 1px solid var(--line-strong); background: rgba(255,255,255,.03); margin: 14px 0 6px; }
+  .verdict .v { font: 800 26px/1 Inter; letter-spacing: -.02em; padding: 10px 18px; border-radius: 12px; }
+  .v.good { background: var(--good-soft); color: var(--good); } .v.warn { background: var(--warn-soft); color: var(--warn); } .v.bad { background: var(--bad-soft); color: var(--bad); } .v. { background: var(--accent-soft); color: var(--accent-2); }
+  .verdict p { margin: 0; color: var(--muted); flex: 1; min-width: 240px; }
+  h3.sec { font-size: 11.5px; text-transform: uppercase; letter-spacing: .12em; color: var(--accent-2); margin: 30px 0 12px; font-weight: 600; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+  .tile { border: 1px solid var(--line-strong); border-radius: 14px; padding: 13px 15px; background: rgba(255,255,255,.03); transition: transform .2s, border-color .2s; }
+  .tile:hover { transform: translateY(-2px); border-color: rgba(255,138,61,.45); }
+  .tile .k { font-size: 12px; color: var(--muted); } .tile .val { font: 600 20px/1.35 "JetBrains Mono", monospace; }
+  .tile .n { font-size: 11.5px; color: var(--muted); }
+  .tile.good .val { color: var(--good); } .tile.warn .val { color: var(--warn); } .tile.bad .val { color: var(--bad); }
+  .charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .chart { border: 1px solid var(--line-strong); border-radius: 16px; padding: 14px 14px 8px; background: rgba(255,255,255,.025); min-width: 0; }
+  .chart.full { grid-column: 1 / -1; }
+  .chart h4 { margin: 0 0 6px; font-size: 14px; font-weight: 600; }
+  .chart svg { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); margin: 4px 0 6px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  svg text { fill: var(--muted); font: 11px Inter, sans-serif; }
+  svg .grid-l { stroke: rgba(255,255,255,.07); }
+  .tbl { overflow-x: auto; border: 1px solid var(--line-strong); border-radius: 14px; margin-bottom: 16px; }
+  .tbl .t { padding: 12px 14px 4px; font-weight: 600; font-size: 14px; }
+  .tbl .note { padding: 0 14px 8px; font-size: 12px; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: right; font-weight: 500; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line-strong); white-space: nowrap; font-size: 12px; }
+  th:first-child, td:first-child { text-align: left; position: sticky; left: 0; background: #141418; }
+  td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: right; font-family: "JetBrains Mono", monospace; white-space: nowrap; }
+  td:first-child { font-family: Inter, sans-serif; color: #ddd; }
+  tr.strong td { font-weight: 600; color: var(--ink); }
+  tbody tr:hover td { background: rgba(255,255,255,.03); }
+  td.neg { color: #ff9b8f; }
+  .sugg { position: relative; border: 1px solid var(--line-strong); border-radius: 16px; padding: 15px 18px 15px 22px; margin-bottom: 11px; background: rgba(255,255,255,.025); overflow: hidden; }
+  .sugg::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+  .sugg.high::before { background: var(--bad); box-shadow: 0 0 14px var(--bad); } .sugg.medium::before { background: var(--warn); } .sugg.low::before { background: var(--accent-2); }
+  .sugg .h { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-weight: 600; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+  .pill.high { background: var(--bad-soft); color: var(--bad); } .pill.medium { background: var(--warn-soft); color: var(--warn); } .pill.low { background: var(--accent-soft); color: var(--accent-2); }
+  .sugg .a { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .sugg p { margin: 7px 0 0; color: var(--muted); font-size: 14px; }
+  .sugg ul { margin: 8px 0 0; padding-left: 20px; font-size: 14px; } .sugg li::marker { color: var(--accent-2); }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tabs button { border: 1px solid var(--line-strong); background: transparent; color: var(--muted); border-radius: 999px; padding: 7px 14px; font: 500 13px Inter; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--accent-soft); color: var(--ink); border-color: var(--accent); }
+  .disclaimer { font-size: 12px; color: var(--muted); margin-top: 20px; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; }
+  .hidden { display: none !important; }
+  @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } .modes { grid-template-columns: 1fr; } .chip { display: none; } .pillnav { order: 3; width: 100%; justify-content: center; } }
+  @media (max-width: 640px) { .panel { padding: 16px; border-radius: 18px; } .hero { padding: 50px 0 26px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  @media print { .aura, .topbar, .hero, .modes, #inputs, footer, .no-print { display: none !important; } body { background: #111; } .panel { box-shadow: none; } .tbl { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="aura" aria-hidden="true"><div class="swirl"></div></div>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="logo">I</span>Invesha</a>
+    <nav class="pillnav" aria-label="Sections">
+      <a href="#models">Models</a><a href="#inputs">Inputs</a><a href="#report">Report</a>
+      <a href="https://github.com/anshumantewary-pm/Invesha-The-Investment-Banker-">GitHub</a>
+    </nav>
+    <span class="status"><span class="dot" id="dot"></span><span id="status">Loading engine…</span></span>
+  </header>
+
+  <section class="hero" id="top">
+    <span class="chip c1"><b>DCF</b> · WACC</span><span class="chip c2"><b>LBO</b> · IRR</span>
+    <span class="chip c3"><b>DSCR</b> · LLCR</span><span class="chip c4"><b>Runway</b> · LTV/CAC</span>
+    <h1>Company In. Financial Model Out.</h1>
+    <p>AutoModel builds the full model for investment banking and corporate finance: projections, DCF, comparables, LBO, project finance and startup models, with an investment view, suggestions and a live Excel model to download.</p>
+    <a class="cta" href="#models">Build a model <span>→</span></a>
+  </section>
+
+  <section id="models" class="modes" role="tablist" aria-label="Model type">
+    <button class="mode" role="tab" data-kind="company"><div class="ic">🏦</div><h3>Company valuation</h3><p>5-year three-statement-lite model, WACC, DCF (perpetuity &amp; exit), trading comps, LBO, football field, Buy / Hold / Reduce.</p></button>
+    <button class="mode" role="tab" data-kind="project"><div class="ic">🏗️</div><h3>Project finance</h3><p>Construction + operations, debt sculpted to DSCR, LLCR, project &amp; equity IRR, break-even tariff, stress tests.</p></button>
+    <button class="mode" role="tab" data-kind="startup"><div class="ic">🚀</div><h3>Startup model</h3><p>Monthly customers, MRR, burn, runway, break-even, unit economics, VC-method valuation and fundraising plan.</p></button>
+  </section>
+
+  <section class="panel" id="inputs">
+    <h2 id="form-title">Inputs</h2>
+    <p class="blurb" id="form-blurb"></p>
+    <div class="actions no-print" style="margin:0 0 16px">
+      <button class="btn" type="button" id="example">Load example</button>
+      <button class="btn" type="button" id="upload-btn">Upload inputs (JSON)</button>
+      <input type="file" id="upload" accept=".json,application/json" class="hidden">
+      <button class="btn" type="button" id="save-inputs">Save inputs</button>
+    </div>
+    <form id="form" novalidate></form>
+    <div class="actions">
+      <button class="run" type="button" id="run" disabled>Build model →</button>
+      <span class="msg" id="msg" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="panel hidden" id="report" aria-live="polite"></section>
+
+  <footer>All calculations run in your browser; nothing you enter leaves this page. Indicative analysis, not investment advice.</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+const PAL = ["#ff7a30", "#ffd23f", "#4fd1a1", "#b392f0", "#00dfd8", "#ff4d6d", "#7aa2ff"];
+const CUR = [["₹", "₹ INR"], ["$", "$ USD"], ["€", "€ EUR"], ["£", "£ GBP"], ["", "None"]];
+// [key, label, type, hint]; type: text | num | int | pct | x | sector | currency | select:a,b | list | rounds
+const FORMS = {
+  company: { title: "Company valuation", blurb: "Last year's figures plus a few assumptions. Percentages in %. All amounts in one unit (e.g. ₹ crore).", groups: [
+    ["Company", [["name","Company name","text"],["sector","Sector","sector"],["currency","Currency","currency"],["unit","Amount unit","text","e.g. Cr, Mn"],["years","Projection years","int"]]],
+    ["Last financial year", [["revenue","Revenue","num"],["ebitda_margin","EBITDA margin","pct"]]],
+    ["Growth and margins", [["growth_start","Revenue growth, year 1","pct"],["growth_end","Revenue growth, final year","pct","fades linearly"],["growth","Or growth per year","list","comma-separated %, overrides the fade"],["margin_target","EBITDA margin, final year","pct","fades from today"]]],
+    ["Operations", [["da_pct","D&A, % of revenue","pct"],["capex_pct","Capex, % of revenue","pct"],["nwc_pct","Working capital, % of revenue","pct"],["tax_rate","Tax rate","pct"]]],
+    ["Balance sheet and market", [["debt","Debt","num"],["cash","Cash","num"],["interest_rate","Cost of debt (pre-tax)","pct"],["shares","Shares outstanding","num","same unit basis as amounts"],["share_price","Share price","num","for Buy / Hold / Reduce"],["invested_capital","Invested capital","num","optional, for ROIC"]]],
+    ["Cost of capital", [["risk_free","Risk-free rate","pct"],["equity_risk_premium","Equity risk premium","pct"],["beta","Levered beta","num","blank = sector beta relevered"],["size_premium","Size / specific premium","pct"],["debt_weight","Target debt weight D/(D+E)","pct","blank = from market cap"]]],
+    ["Terminal value and LBO", [["terminal_growth","Terminal growth","pct"],["exit_multiple","Exit EV/EBITDA","x","blank = sector mid"],["lbo_entry_multiple","LBO entry EV/EBITDA","x","blank = sector mid"],["lbo_leverage","LBO leverage (debt / EBITDA)","x"],["lbo_interest_rate","LBO interest rate","pct"]]],
+  ]},
+  project: { title: "Project finance", blurb: "An asset with a build period and years of operating cash flow: solar, wind, roads, plants, real estate. Percentages in %.", groups: [
+    ["Project", [["name","Project name","text"],["currency","Currency","currency"],["unit","Amount unit","text"]]],
+    ["Asset and revenue", [["capex","Capex","num"],["construction_years","Construction years","int"],["operating_years","Operating years","int"],["capacity","Capacity per year at 100%","num","units sold (MWh, tonnes…)"],["utilisation","Utilisation / PLF","pct"],["price","Price per unit (year 1)","num","in amount unit per capacity unit"],["price_escalation","Price escalation / year","pct"]]],
+    ["Costs and tax", [["opex_fixed","Fixed opex / year","num"],["opex_variable","Variable opex / unit","num"],["opex_escalation","Opex escalation / year","pct"],["tax_rate","Tax rate","pct"],["depreciation_years","Depreciation years","int","blank = operating years"]]],
+    ["Financing", [["gearing","Maximum gearing","pct"],["debt_rate","Debt interest rate","pct"],["tenor","Debt tenor (years)","int"],["repayment","Repayment","select:sculpted,annuity"],["target_dscr","Target DSCR","x"]]],
+    ["Returns", [["discount_rate","Project discount rate","pct"],["cost_of_equity","Equity hurdle (cost of equity)","pct"],["terminal_value","Residual value at end","num"]]],
+  ]},
+  startup: { title: "Startup model", blurb: "Monthly model from customers to cash. Amounts in one unit (e.g. ₹ lakh). Percentages in %.", groups: [
+    ["Startup", [["name","Startup name","text"],["sector","Sector","sector"],["currency","Currency","currency"],["unit","Amount unit","text","e.g. L, K"],["months","Months to model","int"]]],
+    ["Customers", [["starting_customers","Customers today","num"],["new_customers","New customers in month 1","num"],["new_customer_growth","Growth in new customers / month","pct"],["churn","Monthly churn","pct"]]],
+    ["Pricing and costs", [["arpu","Revenue per customer / month","num"],["arpu_growth","Price increase / year","pct"],["gross_margin","Gross margin","pct"],["cac","Cost to acquire a customer","num"],["fixed_costs","Team & overheads / month","num"],["fixed_cost_growth","Growth in team & overheads / month","pct"]]],
+    ["Cash and fundraising", [["cash","Cash today","num"],["funding","Planned funding","rounds","one per line: month=amount"],["raise_amount","Round being raised now","num","for pre-money and dilution"],["exit_multiple","Exit ARR multiple","x","blank = sector mid"],["target_return","VC target return","x"]]],
+  ]},
+};
+const $ = id => document.getElementById(id);
+let py = null, kind = "company", sectors = [], examples = {}, lastReport = null, lastInputs = null;
+
+function setStatus(t, s) { $("status").textContent = t; $("dot").className = "dot" + (s ? " " + s : ""); }
+function msg(t, e) { $("msg").textContent = t; $("msg").className = "msg" + (e ? " error" : ""); }
+function el(tag, attrs = {}, kids = []) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) { if (k === "text") n.textContent = v; else if (v !== null && v !== undefined) n.setAttribute(k, v); }
+  for (const c of [].concat(kids)) if (c !== null && c !== undefined && c !== false) n.append(c);
+  return n;
+}
+const NS = "http://www.w3.org/2000/svg";
+function s(tag, attrs = {}, text) { const n = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v); if (text !== undefined) n.textContent = text; return n; }
+
+function num(v, f, cur = "", unit = "", compact = false) {
+  if (v === null || v === undefined || (typeof v === "number" && !isFinite(v))) return "—";
+  if (typeof v === "string") return v;
+  if (f === "pct") return (v * 100).toFixed(1) + "%";
+  if (f === "x") return v.toFixed(2) + "x";
+  if (f === "int" || f === "year") return Math.round(v).toLocaleString("en-IN");
+  if (f === "price") return cur + (Math.abs(v) < 10 ? v.toFixed(4) : v.toLocaleString("en-IN", { maximumFractionDigits: 2 }));
+  if (f === "num") return Math.abs(v) < 1 ? v.toFixed(4) : v.toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  const sign = v < 0 ? "-" : "", a = Math.abs(v);
+  let body;
+  if (compact && a >= 1e5) body = (a / 1e3).toLocaleString("en-IN", { maximumFractionDigits: 0 }) + "K";
+  else body = a.toLocaleString("en-IN", { maximumFractionDigits: a < 10 ? 2 : a < 1000 ? 1 : 0 });
+  return `${sign}${cur}${body}${unit ? " " + unit : ""}`;
+}
+
+// ------------------------------------------------------------ form
+function buildForm() {
+  const spec = FORMS[kind], form = $("form");
+  $("form-title").textContent = spec.title; $("form-blurb").textContent = spec.blurb;
+  form.replaceChildren();
+  for (const [title, fields] of spec.groups) {
+    const grid = el("div", { class: "grid" });
+    for (const [key, label, type, hint] of fields) {
+      let input;
+      if (type === "sector") input = el("select", { id: "f_" + key }, sectors.map(([k, n]) => el("option", { value: k, text: n })));
+      else if (type === "currency") input = el("select", { id: "f_" + key }, CUR.map(([v, n]) => el("option", { value: v, text: n })));
+      else if (type.startsWith("select:")) input = el("select", { id: "f_" + key }, type.slice(7).split(",").map(v => el("option", { value: v, text: v })));
+      else if (type === "rounds") input = el("textarea", { id: "f_" + key, placeholder: "14=1500" });
+      else input = el("input", { id: "f_" + key, type: type === "text" || type === "list" ? "text" : "number", step: "any", inputmode: type === "text" ? null : "decimal" });
+      grid.append(el("label", { class: type === "rounds" || type === "list" ? "wide" : null }, [
+        document.createTextNode(label + (type === "pct" ? " (%)" : "")), hint ? el("small", { text: hint }) : null, input]));
+    }
+    form.append(el("div", { class: "group" }, [el("div", { text: title }), grid]));
+  }
+}
+
+function fields() { return FORMS[kind].groups.flatMap(g => g[1]); }
+
+function fill(data) {
+  buildForm();
+  for (const [key, , type] of fields()) {
+    const node = $("f_" + key), v = data[key];
+    if (!node || v === undefined || v === null) continue;
+    if (type === "pct") node.value = +(v * 100).toFixed(4);
+    else if (type === "list") node.value = v.map(x => +(x * 100).toFixed(3)).join(", ");
+    else if (type === "rounds") node.value = v.map(r => `${r.month}=${r.amount}`).join("\n");
+    else node.value = v;
+  }
+}
+
+function read() {
+  const out = {};
+  for (const [key, label, type] of fields()) {
+    const raw = $("f_" + key).value.trim();
+    if (raw === "") continue;
+    if (["text", "sector", "currency"].includes(type) || type.startsWith("select:")) { out[key] = raw; continue; }
+    if (type === "list") { out[key] = raw.split(/[,\s]+/).filter(Boolean).map(x => { const n = Number(x); if (!isFinite(n)) throw new Error(`${label}: "${x}" is not a number`); return n / 100; }); continue; }
+    if (type === "rounds") {
+      out[key] = raw.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
+        const [m, a] = l.split(/[=:,]/).map(Number);
+        if (!isFinite(m) || !isFinite(a)) throw new Error(`${label}: write each round as month=amount`);
+        return { month: m, amount: a };
+      }); continue;
+    }
+    const n = Number(raw);
+    if (!isFinite(n)) throw new Error(`${label} is not a number`);
+    out[key] = type === "pct" ? n / 100 : type === "int" ? Math.round(n) : n;
+  }
+  if (out.currency === undefined && $("f_currency")) out.currency = $("f_currency").value;
+  return out;
+}
+
+function selectKind(k, load = true) {
+  kind = k;
+  for (const b of document.querySelectorAll(".mode")) b.setAttribute("aria-selected", String(b.dataset.kind === k));
+  if (load && examples[k]) fill(examples[k]); else buildForm();
+  $("report").classList.add("hidden"); msg("");
+  try { localStorage.setItem("invesha-kind", k); } catch (_) {}
+}
+
+// ------------------------------------------------------------ run
+function call(fn, ...args) { const r = JSON.parse(py[fn](...args)); if (!r.ok) throw new Error(r.error); return r.result; }
+
+function build() {
+  if (!py) return;
+  let inputs;
+  try { inputs = read(); } catch (e) { msg(e.message, true); return; }
+  try {
+    const t0 = performance.now();
+    lastReport = call("run", kind, JSON.stringify(inputs)); lastInputs = inputs;
+    msg(`Model built in ${Math.round(performance.now() - t0)} ms.`);
+    render(lastReport);
+  } catch (e) { msg(e.message, true); }
+}
+
+function download(name, blob) { const a = el("a", { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove(); }
+function fileName(ext) { return `${(lastReport?.title || kind).replace(/[^\w]+/g, "-")}-${kind}-model.${ext}`; }
+
+function downloadExcel() {
+  try {
+    const b64 = call("xlsx", kind, JSON.stringify(lastInputs));
+    const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    download(fileName("xlsx"), new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+    msg("Excel model downloaded: blue cells are inputs, formulas recalculate.");
+  } catch (e) { msg(e.message, true); }
+}
+
+// ------------------------------------------------------------ report
+function render(r) {
+  const rep = $("report"), cur = r.currency, unit = r.unit;
+  const tiles = el("div", { class: "tiles" }, r.tiles.map(t => el("div", { class: "tile " + (t.tone || "") }, [
+    el("div", { class: "k", text: t.label }), el("div", { class: "val", text: num(t.value, t.fmt, ["money", "price"].includes(t.fmt) ? cur : "", "", true) }),
+    t.note ? el("div", { class: "n", text: t.note }) : null])));
+  const charts = el("div", { class: "charts" }, r.charts.map((c, i) => chartBox(c, cur, i === 0 && c.kind === "range")));
+  const tabs = el("div", { class: "tabs no-print" }), tables = el("div");
+  const tblNodes = r.tables.map(t => tableBox(t, cur, unit));
+  r.tables.forEach((t, i) => {
+    const b = el("button", { type: "button", "aria-selected": String(i === 0), text: t.title.split(":")[0] });
+    b.onclick = () => { tblNodes.forEach((n, j) => n.classList.toggle("hidden", j !== i)); [...tabs.children].forEach((x, j) => x.setAttribute("aria-selected", String(j === i))); };
+    tabs.append(b);
+  });
+  tblNodes.forEach((n, i) => { if (i > 0) n.classList.add("hidden"); tables.append(n); });
+  const showAll = el("button", { class: "btn no-print", type: "button", text: "Show all tables" });
+  showAll.onclick = () => tblNodes.forEach(n => n.classList.remove("hidden"));
+  const sugg = r.suggestions.map(x => el("div", { class: "sugg " + x.priority }, [
+    el("div", { class: "h" }, [el("span", { class: "pill " + x.priority, text: x.priority }), el("span", { text: x.title })]),
+    el("div", { class: "a", text: x.area }), el("p", { text: x.detail }),
+    x.actions.length ? el("ul", {}, x.actions.map(a => el("li", { text: a }))) : null]));
+  const dl = el("div", { class: "actions no-print" }, [
+    el("button", { class: "btn xl", type: "button", id: "dl-xlsx", text: "⬇ Download Excel model" }),
+    el("button", { class: "btn", type: "button", id: "dl-json", text: "Download JSON" }),
+    el("button", { class: "btn", type: "button", id: "dl-print", text: "Print / save PDF" })]);
+  rep.replaceChildren(
+    el("div", { style: "display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start" }, [
+      el("div", {}, [el("h2", { text: r.title }), el("p", { class: "blurb", style: "margin:0", text: r.subtitle })]), dl]),
+    el("div", { class: "verdict" }, [el("div", { class: "v " + (r.verdict_tone || ""), text: r.verdict }), el("p", { text: r.verdict_note })]),
+    el("h3", { class: "sec", text: "Key figures" }), tiles,
+    el("h3", { class: "sec", text: "Charts" }), charts,
+    el("h3", { class: "sec", text: "Investment suggestions" }), ...sugg,
+    el("h3", { class: "sec", text: "Financial model" }), tabs, tables, showAll,
+    el("p", { class: "disclaimer", text: `Amounts in ${cur} ${unit}. Sector multiples, betas and ranges are indicative screening values; check them against current market data. This is analysis for discussion, not investment advice.` }));
+  rep.classList.remove("hidden");
+  $("dl-xlsx").onclick = downloadExcel;
+  $("dl-json").onclick = () => download(fileName("json"), new Blob([JSON.stringify({ inputs: lastInputs, report: lastReport }, null, 2)], { type: "application/json" }));
+  $("dl-print").onclick = () => { tblNodes.forEach(n => n.classList.remove("hidden")); window.print(); };
+  rep.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function tableBox(t, cur, unit) {
+  const fmtFor = (ri, ci) => t.by_column ? t.fmts[ci] : t.fmts[ri];
+  const strong = /^(Enterprise value|Equity value|Unlevered|EBITDA$|CFADS|Net income|WACC|Revenue$|Cash$|Closing cash|Total)/;
+  let heat = null;
+  if (/sensitivity/i.test(t.title)) {
+    const vals = t.rows.flatMap(r => r.slice(1)).filter(v => typeof v === "number");
+    heat = [Math.min(...vals), Math.max(...vals)];
+  }
+  const body = t.rows.map((row, ri) => el("tr", { class: strong.test(String(row[0])) ? "strong" : null }, row.map((v, ci) => {
+    const f = ci === 0 && !t.by_column ? "text" : fmtFor(ri, ci);
+    const td = el("td", { class: typeof v === "number" && v < 0 && f === "money" ? "neg" : null, text: ci === 0 && typeof v === "string" ? v : num(v, f) });
+    if (heat && ci > 0 && typeof v === "number" && heat[1] > heat[0]) {
+      const k = (v - heat[0]) / (heat[1] - heat[0]);
+      td.style.background = `rgba(${Math.round(255 - 175 * k)}, ${Math.round(90 + 119 * k)}, ${Math.round(31 + 130 * k)}, .22)`;
+      if (ri === 2 && ci === 3) td.style.outline = "1px solid var(--accent-2)";
+    }
+    return td;
+  })));
+  return el("div", { class: "tbl" }, [el("div", { class: "t", text: t.title }), t.note ? el("div", { class: "note", text: t.note }) : null,
+    el("table", {}, [el("thead", {}, [el("tr", {}, t.columns.map(c => el("th", { text: c })))]), el("tbody", {}, body)])]);
+}
+
+// ------------------------------------------------------------ charts
+function chartBox(c, cur, full) {
+  const box = el("div", { class: "chart" + (full || c.kind === "range" && c.bars.length > 4 ? " full" : "") }, [el("h4", { text: c.title })]);
+  try {
+    if (c.kind === "bars") barChart(box, c);
+    else if (c.kind === "line") lineChart(box, c);
+    else if (c.kind === "range") rangeChart(box, c);
+    else if (c.kind === "waterfall") waterfall(box, c);
+    else if (c.kind === "donut") donut(box, c);
+  } catch (e) { console.error(e); }
+  return box;
+}
+function legend(box, names) { box.append(el("div", { class: "legend" }, names.map((n, i) => el("span", {}, [el("i", { style: `background:${PAL[i % PAL.length]}` }), document.createTextNode(n)])))); }
+function scale(min, max) { if (min === max) { max = min + 1; } const pad = (max - min) * 0.08; return [Math.min(min - pad, min < 0 ? min - pad : 0), max + pad]; }
+function axis(svg, W, H, P, lo, hi, f) {
+  for (let i = 0; i <= 4; i++) {
+    const v = lo + (hi - lo) * i / 4, y = H - P.b - (H - P.t - P.b) * i / 4;
+    svg.append(s("line", { x1: P.l, x2: W - P.r, y1: y, y2: y, class: "grid-l" }));
+    svg.append(s("text", { x: P.l - 6, y: y + 4, "text-anchor": "end" }, num(v, f === "money" ? "money" : f, "", "", true)));
+  }
+}
+function barChart(box, c) {
+  const names = Object.keys(c.series), W = 560, H = 260, P = { l: 58, r: 10, t: 10, b: 28 };
+  const all = names.flatMap(n => c.series[n]).filter(v => v !== null);
+  const [lo, hi] = scale(Math.min(0, ...all), Math.max(0, ...all));
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": c.title });
+  axis(svg, W, H, P, lo, hi, c.fmt);
+  const y = v => H - P.b - (v - lo) / (hi - lo) * (H - P.t - P.b);
+  const gw = (W - P.l - P.r) / c.labels.length, bw = Math.max(Math.min(gw * 0.8 / names.length, 26), 2);
+  c.labels.forEach((lab, i) => {
+    names.forEach((n, j) => {
+      const v = c.series[n][i]; if (v === null || v === undefined) return;
+      const x = P.l + gw * i + (gw - bw * names.length) / 2 + bw * j, y0 = y(0), y1 = y(v);
+      const r = s("rect", { x, y: Math.min(y0, y1), width: bw - 1, height: Math.max(Math.abs(y1 - y0), 1), rx: 2, fill: PAL[j % PAL.length] });
+      r.append(s("title", {}, `${n} ${lab}: ${num(v, c.fmt)}`)); svg.append(r);
+    });
+    if (c.labels.length <= 14 || i % Math.ceil(c.labels.length / 12) === 0) svg.append(s("text", { x: P.l + gw * i + gw / 2, y: H - 8, "text-anchor": "middle" }, lab));
+  });
+  legend(box, names); box.append(svg);
+}
+function lineChart(box, c) {
+  const names = Object.keys(c.series), W = 560, H = 260, P = { l: 58, r: 12, t: 12, b: 28 };
+  const all = names.flatMap(n => c.series[n]).filter(v => v !== null && isFinite(v));
+  if (c.marker !== null) all.push(c.marker);
+  const [lo, hi] = scale(Math.min(...all), Math.max(...all));
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": c.title });
+  axis(svg, W, H, P, lo, hi, c.fmt);
+  const n = c.labels.length, x = i => P.l + (W - P.l - P.r) * (n === 1 ? 0.5 : i / (n - 1)), y = v => H - P.b - (v - lo) / (hi - lo) * (H - P.t - P.b);
+  if (c.marker !== null) {
+    svg.append(s("line", { x1: P.l, x2: W - P.r, y1: y(c.marker), y2: y(c.marker), stroke: "#ff6b5a", "stroke-dasharray": "5 4", "stroke-width": 1.5 }));
+    svg.append(s("text", { x: W - P.r - 4, y: y(c.marker) - 5, "text-anchor": "end", style: "fill:#ff9b8f" }, c.marker_label));
+  }
+  names.forEach((nm, j) => {
+    const pts = c.series[nm].map((v, i) => v === null ? null : [x(i), y(v)]).filter(Boolean);
+    if (!pts.length) return;
+    const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join("");
+    if (j === 0) svg.append(s("path", { d: d + `L${pts[pts.length - 1][0]},${y(Math.max(lo, 0))}L${pts[0][0]},${y(Math.max(lo, 0))}Z`, fill: PAL[0], opacity: .12 }));
+    svg.append(s("path", { d, fill: "none", stroke: PAL[j % PAL.length], "stroke-width": 2.4, "stroke-linejoin": "round" }));
+    if (pts.length <= 30) pts.forEach((p, i) => { const dot = s("circle", { cx: p[0], cy: p[1], r: 3, fill: PAL[j % PAL.length] }); dot.append(s("title", {}, `${nm} ${c.labels[i]}: ${num(c.series[nm][i], c.fmt)}`)); svg.append(dot); });
+  });
+  c.labels.forEach((lab, i) => { if (n <= 14 || i % Math.ceil(n / 12) === 0) svg.append(s("text", { x: x(i), y: H - 8, "text-anchor": "middle" }, lab)); });
+  legend(box, names); box.append(svg);
+}
+function rangeChart(box, c) {
+  const W = 760, row = 34, P = { l: 210, r: 20, t: 10, b: 26 }, H = P.t + P.b + row * c.bars.length;
+  const vals = c.bars.flatMap(b => [b.low, b.high]); if (c.marker !== null) vals.push(c.marker);
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * 0.06 || 1; lo -= pad; hi += pad;
+  const x = v => P.l + (v - lo) / (hi - lo) * (W - P.l - P.r);
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": c.title });
+  for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; svg.append(s("line", { x1: x(v), x2: x(v), y1: P.t, y2: H - P.b, class: "grid-l" })); svg.append(s("text", { x: x(v), y: H - 8, "text-anchor": "middle" }, num(v, c.fmt, "", "", true))); }
+  c.bars.forEach((b, i) => {
+    const yy = P.t + row * i + 7;
+    svg.append(s("text", { x: P.l - 10, y: yy + 14, "text-anchor": "end", style: "fill:#ddd" }, b.label));
+    const r = s("rect", { x: x(Math.min(b.low, b.high)), y: yy, width: Math.max(Math.abs(x(b.high) - x(b.low)), 2), height: 20, rx: 5, fill: `url(#rg${i % 2})` });
+    r.append(s("title", {}, `${b.label}: ${num(b.low, c.fmt)} – ${num(b.high, c.fmt)}`)); svg.append(r);
+    if (b.mid !== null && b.mid !== undefined) svg.append(s("rect", { x: x(b.mid) - 1.5, y: yy - 3, width: 3, height: 26, fill: "#fff", rx: 1 }));
+  });
+  const defs = s("defs"); [["#ffb070", "#ff4d12"], ["#ffd23f", "#ff8a3d"]].forEach((g, i) => { const lg = s("linearGradient", { id: "rg" + i }); lg.append(s("stop", { offset: 0, "stop-color": g[0] })); lg.append(s("stop", { offset: 1, "stop-color": g[1] })); defs.append(lg); });
+  svg.prepend(defs);
+  if (c.marker !== null) { svg.append(s("line", { x1: x(c.marker), x2: x(c.marker), y1: P.t - 4, y2: H - P.b, stroke: "#4fd1a1", "stroke-width": 2, "stroke-dasharray": "5 4" })); svg.append(s("text", { x: x(c.marker) + 5, y: P.t + 8, style: "fill:#4fd1a1" }, c.marker_label)); }
+  box.append(svg);
+}
+function waterfall(box, c) {
+  const vals = c.series.value, W = 560, H = 260, P = { l: 58, r: 10, t: 14, b: 28 };
+  let run = 0; const steps = vals.map((v, i) => { if (i === vals.length - 1) return [0, v]; const a = run; run += v; return [a, run]; });
+  const all = steps.flat(); const [lo, hi] = scale(Math.min(0, ...all), Math.max(...all));
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": c.title });
+  axis(svg, W, H, P, lo, hi, "money");
+  const y = v => H - P.b - (v - lo) / (hi - lo) * (H - P.t - P.b), gw = (W - P.l - P.r) / vals.length;
+  steps.forEach(([a, b], i) => {
+    const last = i === vals.length - 1, color = last ? PAL[2] : vals[i] >= 0 ? PAL[0] : "#ff6b5a";
+    const x = P.l + gw * i + gw * 0.18, w = gw * 0.64;
+    svg.append(s("rect", { x, y: Math.min(y(a), y(b)), width: w, height: Math.max(Math.abs(y(b) - y(a)), 1), rx: 4, fill: color }));
+    svg.append(s("text", { x: x + w / 2, y: Math.min(y(a), y(b)) - 5, "text-anchor": "middle", style: "fill:#ddd" }, num(vals[i], "money", "", "", true)));
+    svg.append(s("text", { x: x + w / 2, y: H - 8, "text-anchor": "middle" }, c.labels[i]));
+    if (!last) svg.append(s("line", { x1: x + w, x2: x + gw, y1: y(b), y2: y(b), stroke: "rgba(255,255,255,.25)", "stroke-dasharray": "3 3" }));
+  });
+  box.append(svg);
+}
+function donut(box, c) {
+  const vals = c.series.value.map(v => Math.max(v, 0)), total = vals.reduce((a, b) => a + b, 0) || 1;
+  const W = 560, H = 230, cx = 120, cy = 115, R = 92, r = 58;
+  const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": c.title });
+  let a0 = -Math.PI / 2;
+  vals.forEach((v, i) => {
+    const a1 = a0 + 2 * Math.PI * v / total, large = a1 - a0 > Math.PI ? 1 : 0;
+    const p = (rad, ang) => [cx + rad * Math.cos(ang), cy + rad * Math.sin(ang)];
+    const [x0, y0] = p(R, a0), [x1, y1] = p(R, Math.min(a1, a0 + 2 * Math.PI - 1e-4)), [x2, y2] = p(r, Math.min(a1, a0 + 2 * Math.PI - 1e-4)), [x3, y3] = p(r, a0);
+    const path = s("path", { d: `M${x0},${y0}A${R},${R} 0 ${large} 1 ${x1},${y1}L${x2},${y2}A${r},${r} 0 ${large} 0 ${x3},${y3}Z`, fill: PAL[i % PAL.length], stroke: "#141418", "stroke-width": 2 });
+    path.append(s("title", {}, `${c.labels[i]}: ${num(v, c.fmt)} (${(v / total * 100).toFixed(1)}%)`)); svg.append(path);
+    svg.append(s("rect", { x: 260, y: 40 + i * 34, width: 12, height: 12, rx: 3, fill: PAL[i % PAL.length] }));
+    svg.append(s("text", { x: 280, y: 50 + i * 34, style: "fill:#ddd;font-size:13px" }, c.labels[i]));
+    svg.append(s("text", { x: 280, y: 65 + i * 34 }, `${num(v, c.fmt, "", "", true)} · ${(v / total * 100).toFixed(1)}%`));
+    a0 = a1;
+  });
+  svg.append(s("text", { x: cx, y: cy + 5, "text-anchor": "middle", style: "fill:#fff;font-size:15px;font-weight:600" }, num(total, c.fmt, "", "", true)));
+  box.append(svg);
+}
+
+// ------------------------------------------------------------ boot
+const GLUE = `
+import base64, json, math
+from invesha import cli, excel
+from invesha.core import InputError
+from invesha.examples import EXAMPLES
+from invesha.sectors import SECTORS
+
+def clean(x):
+    if isinstance(x, float) and not math.isfinite(x):
+        return None
+    if isinstance(x, dict):
+        return {k: clean(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [clean(v) for v in x]
+    return x
+
+def wrap(fn):
+    try:
+        return json.dumps({"ok": True, "result": clean(fn())}, ensure_ascii=False)
+    except (InputError, ValueError, TypeError, ZeroDivisionError) as exc:
+        return json.dumps({"ok": False, "error": str(exc)})
+
+def meta():
+    return wrap(lambda: {"sectors": [[k, s.name] for k, s in SECTORS.items()], "examples": EXAMPLES})
+
+def run(kind, data):
+    return wrap(lambda: cli.run(kind, json.loads(data)).to_dict())
+
+def xlsx(kind, data):
+    return wrap(lambda: base64.b64encode(excel.build(kind, json.loads(data))).decode())
+
+{"meta": meta, "run": run, "xlsx": xlsx}
+`;
+async function boot() {
+  try {
+    const manifest = await (await fetch("manifest.json", { cache: "no-store" })).json();
+    const pyodide = await loadPyodide();
+    await pyodide.loadPackage("micropip");
+    await pyodide.pyimport("micropip").install(new URL(manifest.wheel, location.href).href);
+    py = pyodide.runPython(GLUE).toJs({ dict_converter: Object.fromEntries });
+    const m = call("meta"); sectors = m.sectors; examples = m.examples;
+    let start = "company"; try { start = localStorage.getItem("invesha-kind") || start; } catch (_) {}
+    selectKind(FORMS[start] ? start : "company");
+    $("run").disabled = false;
+    setStatus(`Engine ${manifest.version} ready`, "ready");
+  } catch (e) { console.error(e); setStatus("Engine failed to load", "fail"); msg("Could not load the engine: " + e.message, true); }
+}
+for (const b of document.querySelectorAll(".mode")) b.addEventListener("click", () => { selectKind(b.dataset.kind); $("inputs").scrollIntoView({ behavior: "smooth" }); });
+$("run").addEventListener("click", build);
+$("form").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); build(); } });
+$("example").addEventListener("click", () => { fill(examples[kind]); msg("Example loaded. Edit anything, then Build model."); });
+$("upload-btn").addEventListener("click", () => $("upload").click());
+$("upload").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  try { const d = JSON.parse(await f.text()); fill(d.inputs || d); msg(`Loaded inputs from ${f.name}.`); } catch (err) { msg("Not a valid inputs file: " + err.message, true); }
+});
+$("save-inputs").addEventListener("click", () => { try { const d = read(); download(`${(d.name || kind).replace(/[^\w]+/g, "-")}-inputs.json`, new Blob([JSON.stringify(d, null, 2)], { type: "application/json" })); } catch (e) { msg(e.message, true); } });
+buildForm();
+boot();
+</script>
+</body>
+</html>
