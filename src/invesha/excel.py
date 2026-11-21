@@ -75,6 +75,14 @@ def summary_sheet(wb: Workbook, report: Report) -> Sheet:
             row += 1
             s.set(row, 1, f"• {line}")
         row += 2
+    if report.next_steps:
+        s.set(row, 1, "Recommended next steps", HEADER)
+        s.set(row, 2, "", HEADER)
+        s.set(row, 3, "", HEADER)
+        for k, line in enumerate(report.next_steps, 1):
+            row += 1
+            s.set(row, 1, f"{k}. {line}")
+        row += 2
     s.set(row, 1, "Key figures", HEADER)
     s.set(row, 2, "Value", HEADER)
     s.set(row, 3, "Note", HEADER)

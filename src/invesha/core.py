@@ -184,6 +184,7 @@ class Report:
     suggestions: list[Suggestion] = field(default_factory=list)
     assumptions: list[list[Any]] = field(default_factory=list)  # [label, value, fmt]
     summary: list[str] = field(default_factory=list)  # executive summary / investment thesis bullets
+    next_steps: list[str] = field(default_factory=list)  # recommended next steps for the deal team
     data: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:

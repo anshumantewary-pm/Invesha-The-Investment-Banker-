@@ -415,6 +415,22 @@ def analyse(p: MergerInputs) -> Report:
     ]
     if d.pf_leverage is not None:
         summary.append(f"Pro forma leverage {d.pf_leverage:.1f}x net debt / EBITDA.")
+    steps = [
+        "Diligence the synergies line by line (owner, timing, one-off cost) and re-run accretion at 50% delivery.",
+        "Build the purchase price allocation: identify intangibles and their amortisation, which lowers reported EPS.",
+    ]
+    if a1 < -0.01:
+        steps.append(
+            "Test structures that remove the dilution: more cash/debt, a lower premium, or earn-outs tied to "
+            "target performance."
+        )
+    steps += [
+        "Model the full combined balance sheet and credit metrics; get indicative views from rating agencies "
+        "if leverage rises.",
+        "Line up committed financing (bridge and term loans) before signing; check regulatory and competition "
+        "approvals.",
+        "Obtain a fairness opinion and prepare the board presentation with this accretion analysis.",
+    ]
     return Report(
         kind="merger",
         title=p.name,
@@ -440,6 +456,7 @@ def analyse(p: MergerInputs) -> Report:
             ["Tax rate", p.tax_rate, "pct"],
             ["Run-rate synergies", p.synergies, "money"],
         ],
+        next_steps=steps,
         data={
             "accretion_y1": a1,
             "accretion_y2": a2,

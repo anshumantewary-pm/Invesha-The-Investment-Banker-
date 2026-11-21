@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invesha Academy</title>
+<meta name="description" content="Learn financial modelling, valuation, LBO, M&A, project finance and startup finance from first principles to deal-desk level, with worked examples, quizzes and a glossary.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090b; --surface: rgba(17,17,20,.8); --surface-solid: #111114; --ink: #ededef; --ink-2: #c9c9cf; --muted: #8a8a94; --faint: #5d5d66;
+    --line: rgba(255,255,255,.07); --line-2: rgba(255,255,255,.12); --accent: #ff6b2c; --accent-2: #ff8a52; --accent-soft: rgba(255,107,44,.12);
+    --accent-line: rgba(255,107,44,.38); --good: #3ecf8e; --good-soft: rgba(62,207,142,.12); --bad: #f2555a; --bad-soft: rgba(242,85,90,.12);
+    --blue: #7c8cff; --warn: #f0b429;
+    --sans: Geist, "Helvetica Neue", Arial, sans-serif; --mono: "Geist Mono", ui-monospace, Menlo, monospace; --serif: "Instrument Serif", Georgia, serif;
+    --r: 14px; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.65 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-2); }
+  .glow { position: fixed; z-index: 0; pointer-events: none; width: 900px; height: 900px; left: 50%; top: -560px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(255,107,44,.14), transparent 70%); }
+  .wrap { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 18px 24px 64px; }
+  .ico { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 6px 0 18px; border-bottom: 1px solid var(--line); }
+  .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+  .mark { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); display: grid; place-items: center; }
+  .mark svg { width: 14px; height: 14px; stroke: #fff; stroke-width: 2.2; fill: none; }
+  .word { font: 400 24px/1 var(--serif); } .word small { font: 500 10.5px var(--sans); color: var(--muted); letter-spacing: .14em; text-transform: uppercase; margin-left: 8px; vertical-align: 3px; }
+  .nav { display: flex; gap: 24px; } .nav a { color: var(--muted); text-decoration: none; font-size: 13.5px; } .nav a:hover, .nav a.on { color: var(--ink); }
+  .who { font-size: 13px; color: var(--muted); }
+  .hero { padding: 54px 0 30px; display: grid; grid-template-columns: 1.3fr .7fr; gap: 40px; align-items: end; }
+  .eyebrow { font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-2); }
+  .hero h1 { font: 400 clamp(40px, 5vw, 62px)/1.04 var(--serif); margin: 14px 0 0; } .hero h1 em { color: var(--accent-2); }
+  .hero p { color: var(--muted); max-width: 60ch; margin: 14px 0 0; font-size: 15.5px; }
+  .prog { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 16px 18px; }
+  .prog .k { font-size: 12px; color: var(--muted); } .prog .v { font: 500 26px var(--mono); }
+  .bar { height: 6px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; margin: 10px 0 8px; } .bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .4s; }
+  .prog .s { font-size: 12px; color: var(--faint); }
+  .levels { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 18px; }
+  .levels button, .tabs button { border: 1px solid var(--line-2); background: transparent; color: var(--muted); border-radius: 8px; padding: 6px 12px; font: 500 12.5px var(--sans); cursor: pointer; }
+  .levels button[aria-pressed="true"], .tabs button[aria-selected="true"] { color: var(--ink); border-color: var(--accent-line); background: var(--accent-soft); }
+  .tabs { display: flex; gap: 6px; margin-bottom: 18px; }
+  .layout { display: grid; grid-template-columns: 300px 1fr; gap: 26px; align-items: start; }
+  aside { position: sticky; top: 14px; max-height: calc(100vh - 28px); overflow: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 10px; }
+  .mod { margin-bottom: 4px; }
+  .mod > button { width: 100%; text-align: left; border: 0; background: transparent; color: var(--ink); padding: 9px 10px; border-radius: 9px; cursor: pointer; font: 500 13.5px var(--sans); display: flex; gap: 10px; align-items: baseline; }
+  .mod > button:hover { background: rgba(255,255,255,.04); }
+  .mod .n { font: 500 11px var(--mono); color: var(--faint); } .mod .lv { margin-left: auto; font: 500 10px var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: .08em; }
+  .mod ul { list-style: none; margin: 0 0 6px; padding: 0 0 0 30px; display: none; } .mod.open ul { display: block; }
+  .mod li button { width: 100%; text-align: left; border: 0; background: transparent; color: var(--muted); padding: 6px 8px; border-radius: 7px; cursor: pointer; font: 400 13px var(--sans); display: flex; gap: 8px; align-items: center; }
+  .mod li button:hover { color: var(--ink); } .mod li button.on { color: var(--ink); background: var(--accent-soft); }
+  .tick { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--line-2); flex: none; display: grid; place-items: center; }
+  .tick.done { background: var(--good); border-color: var(--good); } .tick.done::after { content: ""; width: 6px; height: 3px; border-left: 1.5px solid #09090b; border-bottom: 1.5px solid #09090b; transform: rotate(-45deg) translate(1px, -1px); }
+  main.lesson { border: 1px solid var(--line); border-radius: 18px; background: var(--surface); padding: 30px 34px; min-width: 0; }
+  .crumbs { font: 500 11px var(--mono); color: var(--faint); letter-spacing: .1em; text-transform: uppercase; display: flex; gap: 10px; flex-wrap: wrap; }
+  .lesson h2 { font: 400 38px/1.1 var(--serif); margin: 10px 0 6px; }
+  .crumbs span + span::before { content: "·"; margin-right: 10px; color: var(--faint); }
+  .meta { color: var(--muted); font-size: 13px; display: flex; gap: 14px; margin-bottom: 18px; }
+  .lesson h3 { font: 500 18px var(--sans); margin: 28px 0 8px; letter-spacing: -.01em; }
+  .lesson p { color: var(--ink-2); margin: 0 0 10px; max-width: 74ch; } .lesson p b { color: var(--ink); font-weight: 500; }
+  .formula { font: 400 13.5px/1.75 var(--mono); background: rgba(0,0,0,.35); border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 10px 0; white-space: pre-wrap; color: var(--ink); }
+  .example { border: 1px solid rgba(124,140,255,.25); background: rgba(124,140,255,.06); border-radius: 10px; padding: 12px 16px; margin: 10px 0; color: var(--ink-2); font-size: 14px; }
+  .example b, .pro b { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+  .example b { color: var(--blue); }
+  .pro { border: 1px solid var(--accent-line); background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; margin: 26px 0 0; color: var(--ink-2); font-size: 14px; } .pro b { color: var(--accent-2); }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line-2); background: rgba(255,255,255,.035); color: var(--ink-2); border-radius: 10px; padding: 9px 14px; font: 500 13.5px var(--sans); cursor: pointer; text-decoration: none; }
+  .btn:hover { color: var(--ink); border-color: rgba(255,255,255,.24); }
+  .run { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 10px 16px; font: 500 13.5px var(--sans); cursor: pointer; text-decoration: none; }
+  .run:hover { background: var(--accent-2); }
+  .spacer { flex: 1; }
+  .quiz .q { border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin: 12px 0; background: rgba(0,0,0,.2); }
+  .quiz .q p { font-weight: 500; color: var(--ink); }
+  .quiz label { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px; cursor: pointer; color: var(--ink-2); font-size: 14px; }
+  .quiz label:hover { background: rgba(255,255,255,.04); }
+  .quiz label.right { background: var(--good-soft); color: var(--good); } .quiz label.wrong { background: var(--bad-soft); color: var(--bad); }
+  .quiz .why { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .score { font: 500 15px var(--mono); }
+  .gloss-search { width: 100%; font: 400 15px var(--sans); color: var(--ink); background: rgba(0,0,0,.35); border: 1px solid var(--line-2); border-radius: 10px; padding: 11px 14px; margin-bottom: 14px; }
+  .gloss-search:focus { outline: none; border-color: var(--accent-line); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .letters { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 14px; } .letters a { font: 500 12px var(--mono); color: var(--muted); text-decoration: none; padding: 3px 7px; border-radius: 6px; border: 1px solid var(--line); }
+  .letters a:hover { color: var(--ink); }
+  .term { display: grid; grid-template-columns: 220px 1fr auto; gap: 16px; padding: 12px 4px; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .term b { font-weight: 500; } .term span { color: var(--ink-2); font-size: 14px; } .term a { font-size: 12px; white-space: nowrap; }
+  .term.flash { background: var(--accent-soft); }
+  .overview { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 10px; }
+  .card { text-align: left; border: 1px solid var(--line); border-radius: 12px; background: rgba(0,0,0,.2); padding: 16px; cursor: pointer; color: var(--ink); font: inherit; transition: border-color .15s, transform .15s; }
+  .card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+  .card .n { font: 500 11px var(--mono); color: var(--faint); } .card h4 { margin: 6px 0 4px; font: 500 15.5px var(--sans); } .card p { margin: 0; color: var(--muted); font-size: 13px; }
+  .card .foot { display: flex; justify-content: space-between; margin-top: 10px; font: 500 11px var(--mono); color: var(--faint); }
+  .card .foot .done { color: var(--good); }
+  footer { color: var(--faint); font-size: 12px; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 40px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .hidden { display: none !important; }
+  @media (max-width: 960px) { .hero, .layout { grid-template-columns: 1fr; } aside { position: static; max-height: none; } .nav { display: none; } main.lesson { padding: 20px; } .term { grid-template-columns: 1fr; gap: 4px; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 24 24"><path d="M4 18 L9.5 11.5 L13.5 14.5 L20 6"/><path d="M15 6 H20 V11"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></symbol>
+</svg>
+<div class="glow" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="topbar">
+    <a class="brand" href="./"><span class="mark"><svg><use href="#i-logo"/></svg></span><span class="word">Invesha<small>Academy</small></span></a>
+    <nav class="nav"><a href="./">Platform</a><a href="#" class="on" id="nav-course">Course</a><a href="#glossary" id="nav-gloss">Glossary</a></nav>
+    <span class="who" id="who">Learning as guest</span>
+  </header>
+
+  <section class="hero">
+    <div>
+      <span class="eyebrow">Invesha Academy</span>
+      <h1>From first principles to <em>deal-desk</em> mastery.</h1>
+      <p>Twelve modules covering financial statements, modelling, DCF and WACC, comparables, risk analysis, LBOs, M&amp;A, project finance, startup finance, credit and banker-grade practice. Every term explained, every formula worked through, every lesson linked to a live model.</p>
+    </div>
+    <div class="prog">
+      <div class="k">Your progress</div><div class="v" id="pct">0%</div>
+      <div class="bar"><i id="pbar"></i></div>
+      <div class="s" id="pnote">0 of 0 lessons · 0 quizzes passed</div>
+    </div>
+  </section>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" id="t-course" aria-selected="true">Course</button>
+    <button type="button" role="tab" id="t-gloss" aria-selected="false">Glossary</button>
+  </div>
+
+  <div id="course">
+    <div class="levels" id="levels"></div>
+    <div class="layout">
+      <aside id="side" aria-label="Course outline"></aside>
+      <main class="lesson" id="lesson" aria-live="polite"></main>
+    </div>
+  </div>
+
+  <section id="glossary" class="hidden">
+    <input class="gloss-search" id="gq" type="search" placeholder="Search 80+ terms: WACC, DSCR, accretion, terminal value…" aria-label="Search glossary">
+    <div class="letters" id="letters"></div>
+    <div id="terms"></div>
+  </section>
+
+  <footer><span>Invesha Academy · examples use the platform's fictional sample companies.</span><span>Educational content, not investment advice.</span></footer>
+</div>
+
+<script src="learn.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+function el(tag, attrs = {}, kids = []) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) { if (k === "text") n.textContent = v; else if (k === "html") n.innerHTML = v; else if (v !== null && v !== undefined) n.setAttribute(k, v); }
+  for (const c of [].concat(kids)) if (c !== null && c !== undefined && c !== false) n.append(c);
+  return n;
+}
+function icon(id) { const n = document.createElementNS("http://www.w3.org/2000/svg", "svg"); n.setAttribute("class", "ico"); const u = document.createElementNS("http://www.w3.org/2000/svg", "use"); u.setAttribute("href", "#" + id); n.append(u); return n; }
+
+// ---- user + progress (per account on this device)
+let user = null;
+try { user = JSON.parse(localStorage.getItem("invesha-session") || sessionStorage.getItem("invesha-session") || "null"); } catch (_) {}
+const KEY = `invesha-learn-${user && user.email ? user.email : "guest"}`;
+let progress = { done: {}, quiz: {} };
+try { progress = { done: {}, quiz: {}, ...JSON.parse(localStorage.getItem(KEY) || "{}") }; } catch (_) {}
+function save() { try { localStorage.setItem(KEY, JSON.stringify(progress)); } catch (_) {} renderProgress(); renderSide(); }
+if (user) $("who").textContent = `${user.name || "Guest"}${user.level ? " · " + user.level : ""}`;
+
+let level = 0, current = null;  // current = {type: "lesson"|"quiz"|"module", id}
+
+function renderProgress() {
+  const total = LESSONS.length, done = LESSONS.filter(l => progress.done[l.id]).length;
+  const quizzes = Object.values(progress.quiz).filter(q => q.best >= 2).length;
+  const pct = Math.round((done + quizzes) / (total + MODULES.length) * 100);
+  $("pct").textContent = pct + "%"; $("pbar").style.width = pct + "%";
+  $("pnote").textContent = `${done} of ${total} lessons · ${quizzes} of ${MODULES.length} quizzes passed`;
+}
+
+function renderLevels() {
+  const box = $("levels"); box.replaceChildren();
+  [[0, "All levels"], [1, "Foundation"], [2, "Core"], [3, "Advanced"], [4, "Expert"]].forEach(([v, t]) => {
+    const b = el("button", { type: "button", "aria-pressed": String(level === v), text: t });
+    b.onclick = () => { level = v; renderLevels(); renderSide(); if (!current || current.type === "home") showHome(); };
+    box.append(b);
+  });
+}
+
+function renderSide() {
+  const side = $("side"); side.replaceChildren();
+  const home = el("div", { class: "mod" }, [el("button", { type: "button" }, [el("span", { class: "n", text: "··" }), document.createTextNode("Course overview")])]);
+  home.firstChild.onclick = () => showHome(); side.append(home);
+  for (const m of MODULES.filter(m => !level || m.level === level)) {
+    const lessons = LESSONS.filter(l => l.module === m.id);
+    const open = current && (current.module === m.id);
+    const box = el("div", { class: "mod" + (open ? " open" : "") });
+    const head = el("button", { type: "button" }, [el("span", { class: "n", text: m.n }), document.createTextNode(m.title), el("span", { class: "lv", text: LEVELS[m.level] })]);
+    head.onclick = () => { box.classList.toggle("open"); };
+    const ul = el("ul");
+    for (const l of lessons) {
+      const b = el("button", { type: "button", class: current && current.id === l.id ? "on" : null }, [el("span", { class: "tick" + (progress.done[l.id] ? " done" : "") }), document.createTextNode(l.title)]);
+      b.onclick = () => showLesson(l.id); ul.append(el("li", {}, [b]));
+    }
+    const q = progress.quiz[m.id];
+    const qb = el("button", { type: "button", class: current && current.type === "quiz" && current.id === m.id ? "on" : null },
+      [el("span", { class: "tick" + (q && q.best >= 2 ? " done" : "") }), document.createTextNode(`Module quiz${q ? ` · best ${q.best}/3` : ""}`)]);
+    qb.onclick = () => showQuiz(m.id); ul.append(el("li", {}, [qb]));
+    box.append(head, ul); side.append(box);
+  }
+}
+
+function showHome() {
+  current = { type: "home" }; history.replaceState(null, "", "#");
+  const main = $("lesson");
+  const cards = MODULES.filter(m => !level || m.level === level).map(m => {
+    const ls = LESSONS.filter(l => l.module === m.id), done = ls.filter(l => progress.done[l.id]).length;
+    const c = el("button", { class: "card", type: "button" }, [el("span", { class: "n", text: `MODULE ${m.n} · ${LEVELS[m.level].toUpperCase()}` }), el("h4", { text: m.title }), el("p", { text: m.blurb }),
+      el("div", { class: "foot" }, [el("span", { text: `${ls.length} lessons · ${ls.reduce((a, l) => a + l.minutes, 0)} min` }), el("span", { class: done === ls.length ? "done" : null, text: `${done}/${ls.length} done` })])]);
+    c.onclick = () => showLesson(ls[0].id); return c;
+  });
+  const next = LESSONS.find(l => !progress.done[l.id]);
+  main.replaceChildren(
+    el("div", { class: "crumbs" }, [el("span", { text: "Course overview" })]),
+    el("h2", { text: "How this course works" }),
+    el("p", { text: "Start at Module 01 if you are new: each lesson explains the vocabulary, gives the formula, works a real example with numbers from the platform's sample companies, and ends with a banker-level note. Experienced professionals can jump straight to Advanced and Expert modules or use the glossary as a reference." }),
+    el("p", { text: "Every lesson has a “Try it” button that opens the matching model with sample data, so you can change an assumption and see the effect immediately." }),
+    next ? el("div", { class: "actions" }, [el("button", { class: "run", type: "button", text: (Object.keys(progress.done).length ? "Continue: " : "Start: ") + next.title }, [])]) : el("p", { text: "You have completed every lesson. Use the glossary and the quizzes to keep sharp." }),
+    el("h3", { text: "Modules" }), el("div", { class: "overview" }, cards));
+  if (next) main.querySelector(".run").onclick = () => showLesson(next.id);
+  renderSide();
+}
+
+function showLesson(id) {
+  const l = LESSONS.find(x => x.id === id); if (!l) return showHome();
+  const m = MODULES.find(x => x.id === l.module);
+  current = { type: "lesson", id, module: m.id }; history.replaceState(null, "", "#lesson=" + id);
+  const order = LESSONS.map(x => x.id), i = order.indexOf(id);
+  const main = $("lesson");
+  const body = [];
+  for (const sct of l.sections) {
+    if (sct.h) body.push(el("h3", { text: sct.h }));
+    if (sct.p) body.push(el("p", { html: sct.p }));
+    if (sct.f) body.push(el("div", { class: "formula", text: sct.f }));
+    if (sct.ex) body.push(el("div", { class: "example" }, [el("b", { text: "Worked example" }), document.createTextNode(sct.ex)]));
+  }
+  if (l.pro) body.push(el("div", { class: "pro" }, [el("b", { text: "Banker-level note" }), document.createTextNode(l.pro)]));
+  const doneBtn = el("button", { class: "btn", type: "button" }, [icon("i-check"), document.createTextNode(progress.done[id] ? "Completed" : "Mark as complete")]);
+  doneBtn.onclick = () => { progress.done[id] = !progress.done[id]; if (!progress.done[id]) delete progress.done[id]; save(); showLesson(id); };
+  const prev = i > 0 ? el("button", { class: "btn", type: "button" }, [icon("i-back"), document.createTextNode("Previous")]) : null;
+  if (prev) prev.onclick = () => showLesson(order[i - 1]);
+  const isLastInModule = LESSONS.filter(x => x.module === m.id).slice(-1)[0].id === id;
+  const next = el("button", { class: "btn", type: "button" }, [document.createTextNode(isLastInModule ? "Take the module quiz" : "Next lesson"), icon("i-arrow")]);
+  next.onclick = () => { progress.done[id] = true; save(); isLastInModule ? showQuiz(m.id) : showLesson(order[i + 1]); };
+  const tryIt = l.try ? el("a", { class: "run", href: `./?sample=${l.try}` }, [icon("i-play"), document.createTextNode("Try it with sample data")]) : null;
+  main.replaceChildren(
+    el("div", { class: "crumbs" }, [el("span", { text: `Module ${m.n}` }), el("span", { text: m.title }), el("span", { text: LEVELS[m.level] })]),
+    el("h2", { text: l.title }), el("div", { class: "meta" }, [el("span", { text: `${l.minutes} min read` }), el("span", { text: progress.done[id] ? "Completed" : "Not completed" })]),
+    ...body, el("div", { class: "actions" }, [prev, doneBtn, el("span", { class: "spacer" }), tryIt, next]));
+  renderSide(); main.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function showQuiz(mid) {
+  const m = MODULES.find(x => x.id === mid), qs = QUIZ[mid];
+  current = { type: "quiz", id: mid, module: mid }; history.replaceState(null, "", "#quiz=" + mid);
+  const main = $("lesson"), answers = {};
+  const boxes = qs.map((q, qi) => el("div", { class: "q" }, [el("p", { text: `${qi + 1}. ${q[0]}` }),
+    ...q[1].map((opt, oi) => { const inp = el("input", { type: "radio", name: "q" + qi, value: oi }); inp.onchange = () => { answers[qi] = oi; }; return el("label", {}, [inp, document.createTextNode(opt)]); }),
+    el("div", { class: "why hidden" })]));
+  const result = el("span", { class: "score" });
+  const submit = el("button", { class: "run", type: "button", text: "Check answers" });
+  submit.onclick = () => {
+    let score = 0;
+    qs.forEach((q, qi) => {
+      const labels = boxes[qi].querySelectorAll("label");
+      labels.forEach((lab, oi) => { lab.classList.toggle("right", oi === q[2]); lab.classList.toggle("wrong", answers[qi] === oi && oi !== q[2]); });
+      const why = boxes[qi].querySelector(".why"); why.textContent = (answers[qi] === q[2] ? "Correct. " : "Answer: " + q[1][q[2]] + ". ") + q[3]; why.classList.remove("hidden");
+      if (answers[qi] === q[2]) score++;
+    });
+    const best = Math.max(score, (progress.quiz[mid] || {}).best || 0);
+    progress.quiz[mid] = { best, last: score, at: Date.now() }; save();
+    result.textContent = `${score}/3 ${score >= 2 ? "· passed" : "· review the lessons and try again"}`;
+  };
+  const idx = MODULES.indexOf(m), nextMod = MODULES[idx + 1];
+  const nextBtn = nextMod ? el("button", { class: "btn", type: "button" }, [document.createTextNode(`Next module: ${nextMod.title}`), icon("i-arrow")]) : null;
+  if (nextBtn) nextBtn.onclick = () => showLesson(LESSONS.find(l => l.module === nextMod.id).id);
+  main.replaceChildren(el("div", { class: "crumbs" }, [el("span", { text: `Module ${m.n}` }), el("span", { text: m.title })]),
+    el("h2", { text: "Module quiz" }), el("p", { text: "Three questions. Score two or more to pass; your best score is saved." }),
+    el("div", { class: "quiz" }, boxes), el("div", { class: "actions" }, [submit, result, el("span", { class: "spacer" }), nextBtn]));
+  renderSide();
+}
+
+// ---- glossary
+function renderGlossary(filter = "") {
+  const q = filter.trim().toLowerCase(), terms = Object.keys(GLOSSARY).sort((a, b) => a.localeCompare(b));
+  const shown = terms.filter(t => !q || t.toLowerCase().includes(q) || GLOSSARY[t].d.toLowerCase().includes(q));
+  const letters = [...new Set(terms.map(t => t[0].toUpperCase()))];
+  $("letters").replaceChildren(...letters.map(L => { const a = el("a", { href: "#", text: L }); a.onclick = e => { e.preventDefault(); const n = document.querySelector(`[data-letter="${L}"]`); if (n) n.scrollIntoView({ behavior: "smooth" }); }; return a; }));
+  let lastL = "";
+  $("terms").replaceChildren(...shown.map(t => {
+    const m = MODULES.find(x => x.id === GLOSSARY[t].m), L = t[0].toUpperCase();
+    const link = el("a", { href: "#", text: `Learn in ${m ? m.title : "course"} →` });
+    link.onclick = e => { e.preventDefault(); showTab("course"); showLesson(LESSONS.find(l => l.module === GLOSSARY[t].m).id); };
+    const row = el("div", { class: "term", id: "term-" + t.replace(/[^\w]+/g, "-"), "data-letter": L !== lastL ? L : null }, [el("b", { text: t }), el("span", { text: GLOSSARY[t].d }), link]);
+    lastL = L; return row;
+  }));
+  if (!shown.length) $("terms").append(el("p", { text: "No terms match. Try a shorter search." }));
+}
+function showTab(t) {
+  $("course").classList.toggle("hidden", t !== "course"); $("glossary").classList.toggle("hidden", t !== "gloss");
+  $("t-course").setAttribute("aria-selected", String(t === "course")); $("t-gloss").setAttribute("aria-selected", String(t === "gloss"));
+  $("nav-course").classList.toggle("on", t === "course"); $("nav-gloss").classList.toggle("on", t === "gloss");
+}
+$("t-course").onclick = () => showTab("course"); $("t-gloss").onclick = () => showTab("gloss");
+$("nav-course").onclick = e => { e.preventDefault(); showTab("course"); };
+$("nav-gloss").onclick = e => { e.preventDefault(); showTab("gloss"); };
+$("gq").addEventListener("input", e => renderGlossary(e.target.value));
+
+// ---- boot + deep links (#lesson=id, #quiz=module, #term=WACC, #glossary)
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h.startsWith("lesson=")) { showTab("course"); showLesson(h.slice(7)); }
+  else if (h.startsWith("quiz=")) { showTab("course"); showQuiz(h.slice(5)); }
+  else if (h.startsWith("term=")) {
+    showTab("gloss"); $("gq").value = ""; renderGlossary();
+    const n = document.getElementById("term-" + h.slice(5).replace(/[^\w]+/g, "-"));
+    if (n) { n.classList.add("flash"); setTimeout(() => n.scrollIntoView({ behavior: "smooth", block: "center" }), 100); }
+  } else if (h === "glossary") showTab("gloss");
+  else if (!current || current.type !== "home") showHome();
+}
+renderLevels(); renderProgress(); renderGlossary(); showHome(); route();
+addEventListener("hashchange", route);
+</script>
+</body>
+</html>

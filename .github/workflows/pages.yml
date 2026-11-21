@@ -32,7 +32,8 @@ jobs:
       - name: Assemble site
         run: |
           mkdir -p site
-          cp web/index.html site/
+          cp web/*.html web/*.js site/
+          mkdir -p site/samples && cp tests/fixtures/* site/samples/
           cp dist/*.whl site/
           wheel=$(basename dist/*.whl)
           version=$(python -c "import invesha; print(invesha.__version__)")

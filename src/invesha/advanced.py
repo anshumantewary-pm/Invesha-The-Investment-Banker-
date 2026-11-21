@@ -687,6 +687,62 @@ def enrich(
         else "Credit metrics not meaningful at negative EBITDA."
     )
     report.summary = s
+    steps = [
+        "Replace the indicative sector multiples with 5-10 listed peers and their current EV/EBITDA and P/E "
+        "(calendarised to the same year) before relying on the comparables."
+    ]
+    if d.tv_share > 0.75:
+        steps.append(
+            f"{d.tv_share:.0%} of value is terminal: extend the explicit forecast to 7-10 years and show the "
+            "WACC × growth grid in any materials."
+        )
+    else:
+        steps.append(
+            "Build a bottom-up revenue model (volume × price by segment or geography) to support the growth path."
+        )
+    if report.verdict == "BUY":
+        steps.append(
+            f"Draft an investment committee memo: thesis, bear case, and an entry discipline of at most "
+            f"{cur}{mc.p25:,.0f} ({label}, Monte Carlo P25)."
+        )
+    elif report.verdict == "REDUCE":
+        steps.append(
+            "Write the variant view: which growth or margin assumption the market makes that the plan does not, "
+            "and what would have to be true for the price to hold."
+        )
+    elif report.verdict == "HOLD":
+        steps.append(
+            f"Set review triggers at the P25 ({cur}{mc.p25:,.0f}) and P75 ({cur}{mc.p75:,.0f}) values and track "
+            "quarterly margin delivery against the model."
+        )
+    else:
+        steps.append(
+            "Add shares outstanding and the share price to turn the valuation into a Buy / Hold / Reduce call."
+        )
+    if deal and deal.irr is not None:
+        if deal.irr >= 0.2:
+            steps.append(
+                "Sponsor interest is likely: prepare a teaser and a list of private equity funds active in "
+                f"{sector.name.lower()}, and test financing appetite at {p.lbo_leverage:.1f}x with lenders."
+            )
+        else:
+            steps.append(
+                "Sponsor returns are thin: build a strategic-buyer list and quantify their synergies, which "
+                "sponsors cannot pay for."
+            )
+    if credit["leverage"] != float("inf") and credit["leverage"] > 3:
+        steps.append(
+            "Model a deleveraging plan (asset sales, equity raise, dividend cut) and the covenant headroom "
+            "under the bear case."
+        )
+    steps.append(
+        "Add precedent transactions (control premiums paid in the sector) as a football-field bar for an "
+        "M&A view of value."
+    )
+    steps.append(
+        "Extend to a full three-statement model and reconcile year 0 to the audited balance sheet and cash flow."
+    )
+    report.next_steps = steps
     report.data.update(
         {
             "weighted": weighted,

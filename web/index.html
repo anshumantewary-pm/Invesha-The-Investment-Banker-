@@ -170,6 +170,38 @@
   .meth.found { background: var(--good-soft); color: var(--good); } .meth.derived { background: rgba(124,140,255,.12); color: var(--blue); }
   .need { padding: 12px 16px; border-top: 1px solid var(--line); background: var(--warn-soft); color: var(--warn); font-size: 13px; display: flex; gap: 8px; align-items: center; }
   .found .more { padding: 10px 16px; border-top: 1px solid var(--line); font-size: 12px; color: var(--faint); }
+  .help { display: inline-grid; place-items: center; width: 15px; height: 15px; margin-left: 6px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--muted); font: 500 10px var(--mono); text-decoration: none; vertical-align: 1px; }
+  .help:hover { color: var(--accent-2); border-color: var(--accent-line); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pw { position: relative; } .pw input { padding-right: 58px; }
+  .pw button { position: absolute; right: 6px; bottom: 6px; border: 0; background: rgba(255,255,255,.06); color: var(--muted); border-radius: 6px; padding: 4px 8px; font: 500 11px var(--sans); cursor: pointer; }
+  .meter { height: 4px; border-radius: 99px; background: rgba(255,255,255,.07); overflow: hidden; margin-top: -6px; } .meter i { display: block; height: 100%; width: 0; transition: width .2s, background .2s; }
+  .meter-note { font-size: 11.5px; color: var(--faint); margin-top: -8px; }
+  dialog { border: 1px solid var(--line-2); border-radius: 18px; background: #121215; color: var(--ink); padding: 0; width: min(560px, 94vw); box-shadow: 0 40px 120px rgba(0,0,0,.6); }
+  dialog::backdrop { background: rgba(0,0,0,.6); backdrop-filter: blur(4px); }
+  .dlg-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+  .dlg-head h3 { margin: 0; font: 400 26px var(--serif); }
+  .dlg-body { padding: 18px 22px; display: grid; gap: 14px; max-height: 70vh; overflow: auto; }
+  .dlg-body h4 { margin: 8px 0 0; font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .danger { color: var(--bad) !important; border-color: rgba(242,85,90,.35) !important; }
+  .samples { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .samples h3 { margin: 0 0 4px; font: 500 16px var(--sans); display: flex; gap: 10px; align-items: center; } .samples h3 .ico { color: var(--accent-2); }
+  .sample-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin: 12px 0; }
+  .sample-card { text-align: left; border: 1px solid var(--line); background: rgba(255,255,255,.02); color: var(--ink); border-radius: 12px; padding: 13px 14px; font: inherit; cursor: pointer; transition: border-color .15s, background .15s; }
+  .sample-card:hover { border-color: var(--accent-line); background: var(--accent-soft); }
+  .sample-card b { display: block; font-weight: 500; } .sample-card .tg { font: 500 10.5px var(--mono); color: var(--accent-2); letter-spacing: .06em; text-transform: uppercase; }
+  .sample-card p { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); }
+  .files { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; } .files a { color: var(--ink-2); }
+  .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 8px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: rgba(0,0,0,.2); color: var(--ink-2); font-size: 14px; }
+  .steps li::before { content: counter(s, decimal-leading-zero); font: 500 12px var(--mono); color: var(--accent-2); padding-top: 2px; }
+  .models-list { display: grid; gap: 8px; }
+  .model-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: rgba(0,0,0,.2); }
+  .model-row b { font-weight: 500; } .model-row span { font-size: 12.5px; color: var(--muted); } .model-row .acts { display: flex; gap: 6px; }
+  .model-row .acts button { padding: 6px 10px; font-size: 12.5px; }
+  .academy { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 16px 18px; margin-bottom: 22px; }
+  .academy b { font: 400 22px var(--serif); font-weight: 400; } .academy p { margin: 2px 0 0; color: var(--muted); font-size: 13.5px; }
+  .learn-link { font-size: 12.5px; color: var(--muted); } .learn-link a { color: var(--accent-2); }
   /* data source */
   .sources { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; }
   .src { border-radius: var(--r); border: 1px solid var(--line); padding: 20px; background: rgba(0,0,0,.18); display: flex; flex-direction: column; gap: 12px; }
@@ -308,7 +340,13 @@
       <form id="auth-form" novalidate>
         <label id="name-row" class="hidden">Full name<input id="a-name" type="text" autocomplete="name" placeholder="Your name"></label>
         <label>Work email<input id="a-email" type="email" autocomplete="email" placeholder="you@company.com" required></label>
-        <label>Password<input id="a-pass" type="password" autocomplete="current-password" placeholder="At least 8 characters" required></label>
+        <div id="profile-rows" class="hidden two">
+          <label>Organisation<input id="a-org" type="text" autocomplete="organization" placeholder="Firm or university"></label>
+          <label>Role<select id="a-role"><option>Analyst</option><option>Associate</option><option>VP / Director</option><option>MD / Partner</option><option>Founder / CFO</option><option>Student</option><option>Investor</option><option>Other</option></select></label>
+          <label class="wide" style="grid-column:1/-1">Experience with financial modelling<select id="a-level"><option value="Beginner">Beginner: explain the terms as I go</option><option value="Intermediate">Intermediate: I know the basics</option><option value="Professional" selected>Professional: banking, PE or corporate finance</option></select></label>
+        </div>
+        <label class="pw">Password<input id="a-pass" type="password" autocomplete="current-password" placeholder="At least 8 characters" required><button type="button" id="pw-toggle" aria-label="Show password">Show</button></label>
+        <div class="meter hidden" id="meter"><i id="meter-bar"></i></div><div class="meter-note hidden" id="meter-note"></div>
         <label id="confirm-row" class="hidden">Confirm password<input id="a-pass2" type="password" autocomplete="new-password"></label>
         <div class="row"><label><input type="checkbox" id="a-remember" checked> Keep me signed in</label><span id="auth-hint"></span></div>
         <button class="run" type="submit" id="auth-submit">Sign in</button>
@@ -326,12 +364,12 @@
   <header class="topbar">
     <a class="brand" href="#top"><span class="mark"><svg><use href="#i-logo"/></svg></span><span class="word">Invesha<small>AutoModel</small></span></a>
     <nav class="nav" aria-label="Sections">
-      <a href="#models">Models</a><a href="#source">Data</a><a href="#report">Report</a>
+      <a href="#models">Models</a><a href="#mymodels" id="nav-mine">My models</a><a href="tutorial.html">Academy</a>
       <a href="https://github.com/anshumantewary-pm/Invesha-The-Investment-Banker-">Documentation</a>
     </nav>
     <div class="right">
       <span class="status"><span class="dot" id="dot"></span><span id="status">Loading engine…</span></span>
-      <span class="user"><span class="avatar" id="avatar">G</span><span id="user-name">Guest</span><button type="button" id="signout">Sign out</button></span>
+      <span class="user"><button type="button" id="account-btn" style="display:flex;gap:9px;align-items:center;border:0;background:none;color:inherit;padding:0 4px 0 0;cursor:pointer;font:inherit"><span class="avatar" id="avatar">G</span><span id="user-name">Guest</span></button><button type="button" id="signout">Sign out</button></span>
     </div>
   </header>
 
@@ -358,6 +396,15 @@
     <button class="mode" role="tab" data-kind="startup"><div class="top"><svg class="ico"><use href="#i-growth"/></svg><span class="n">03</span></div><h3>Startup model</h3><p>Monthly customers, recurring revenue and burn, runway and break-even, unit economics and a venture valuation.</p><div class="chips"><span>MRR</span><span>Runway</span><span>LTV/CAC</span><span>VC method</span></div></button>
   </section>
 
+  <div class="academy" id="academy-strip"><div><b>New to financial modelling?</b><p id="academy-note">Invesha Academy teaches every term and method used here, from the three statements to LBOs and project finance.</p></div><a class="btn" href="tutorial.html">Open the Academy <svg class="ico"><use href="#i-arrow"/></svg></a></div>
+
+  <section class="panel hidden" id="mymodels">
+    <span class="eyebrow">Workspace</span>
+    <h2>My models</h2>
+    <p class="blurb" id="mymodels-note">Models you save are kept for your account on this device.</p>
+    <div class="models-list" id="models-list"></div>
+  </section>
+
   <section class="panel hidden" id="source">
     <span class="eyebrow">Step 2 · Data</span>
     <h2 id="source-title">How would you like to add your data?</h2>
@@ -379,6 +426,17 @@
         <button class="choice" type="button" id="start-blank"><div><b>Blank form</b><span>Start with your own figures</span></div><svg class="ico"><use href="#i-arrow"/></svg></button>
         <button class="choice" type="button" id="start-example"><div><b>Worked example</b><span>See a complete case, then edit it</span></div><svg class="ico"><use href="#i-arrow"/></svg></button>
         <button class="choice hidden" type="button" id="start-last"><div><b>Resume last session</b><span id="last-note">Your last inputs for this model</span></div><svg class="ico"><use href="#i-history"/></svg></button>
+      </div>
+    </div>
+    <div class="samples">
+      <h3><svg class="ico"><use href="#i-sheet"/></svg>Sample library</h3>
+      <p class="blurb" style="margin:0">Fictional companies and deals with complete data. Load one, explore the model, then change any assumption.</p>
+      <div class="sample-grid" id="sample-grid"></div>
+      <div class="files">Try the automatic upload with sample files:
+        <a href="samples/northstar_statements.xlsx" download>Annual report statements (XLSX)</a>
+        <a href="samples/pnl_simple.csv" download>US-style P&amp;L (CSV)</a>
+        <a href="samples/startup_mis.csv" download>Startup MIS (CSV)</a>
+        <a href="samples/solar_termsheet.csv" download>Project term sheet (CSV)</a>
       </div>
     </div>
     <div class="msg" id="source-msg" aria-live="polite" style="margin-top:12px"></div>
@@ -403,14 +461,42 @@
 
   <section class="panel hidden" id="report" aria-live="polite"></section>
 
+  <dialog id="account" aria-labelledby="acc-title">
+    <div class="dlg-head"><h3 id="acc-title">Account</h3><button class="btn" type="button" id="acc-close">Close</button></div>
+    <div class="dlg-body">
+      <div id="acc-guest" class="hidden"><p class="blurb" style="margin:0">You are using a guest session. Create an account to keep your saved models and learning progress under your name.</p><button class="run" type="button" id="acc-create" style="margin-top:12px">Create an account</button></div>
+      <div id="acc-user">
+        <h4>Profile</h4>
+        <div class="two" style="margin-top:10px">
+          <label>Full name<input id="p-name" type="text"></label>
+          <label>Email<input id="p-email" type="email" disabled></label>
+          <label>Organisation<input id="p-org" type="text"></label>
+          <label>Role<select id="p-role"><option>Analyst</option><option>Associate</option><option>VP / Director</option><option>MD / Partner</option><option>Founder / CFO</option><option>Student</option><option>Investor</option><option>Other</option></select></label>
+          <label style="grid-column:1/-1">Experience<select id="p-level"><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Professional">Professional</option></select></label>
+        </div>
+        <div class="actions"><button class="run" type="button" id="p-save">Save profile</button><span class="msg" id="p-msg"></span></div>
+        <h4>Change password</h4>
+        <div class="two" style="margin-top:10px">
+          <label>Current password<input id="c-old" type="password" autocomplete="current-password"></label>
+          <label>New password<input id="c-new" type="password" autocomplete="new-password"></label>
+        </div>
+        <div class="actions"><button class="btn" type="button" id="c-save">Update password</button><span class="msg" id="c-msg"></span></div>
+        <h4>Your data</h4>
+        <p class="blurb" style="margin:0">Export everything stored for your account (profile, saved models, learning progress), or delete it from this device.</p>
+        <div class="actions"><button class="btn" type="button" id="d-export"><svg class="ico"><use href="#i-download"/></svg>Export my data</button><button class="btn danger" type="button" id="d-delete">Delete account</button></div>
+      </div>
+    </div>
+  </dialog>
+
   <footer><span>All calculations run in your browser. Nothing you enter leaves this page.</span><span>Indicative analysis for discussion, not investment advice.</span></footer>
 </div>
 
+<script src="learn.js"></script>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
 const PAL = ["#ff6b2c", "#e8b04b", "#3ecf8e", "#7c8cff", "#a78bfa", "#4cc9f0", "#f2555a"];
 const CUR = [["₹", "₹ INR"], ["$", "$ USD"], ["€", "€ EUR"], ["£", "£ GBP"], ["", "None"]];
-let FORMS = {}, DEFAULTS = {}, REQUIRED = {};  // field definitions come from the engine (invesha.fields)
+let FORMS = {}, DEFAULTS = {}, REQUIRED = {}, SAMPLES = {};  // field definitions come from the engine (invesha.fields)
 const $ = id => document.getElementById(id);
 let py = null, kind = null, sectors = [], examples = {}, lastReport = null, lastInputs = null, user = null;
 
@@ -455,8 +541,10 @@ function buildForm() {
       else if (type.startsWith("select:")) input = el("select", { id: "f_" + key }, type.slice(7).split(",").map(v => el("option", { value: v, text: v })));
       else if (type === "rounds") input = el("textarea", { id: "f_" + key, placeholder: "14=1500" });
       else input = el("input", { id: "f_" + key, type: type === "text" || type === "list" ? "text" : "number", step: "any", inputmode: type === "text" ? null : "decimal" });
-      grid.append(el("label", { class: type === "rounds" || type === "list" ? "wide" : null }, [
-        document.createTextNode(label + (type === "pct" ? " (%)" : "") + ((REQUIRED[kind] || []).includes(key) ? " *" : "")), hint ? el("small", { text: hint }) : null, input]));
+      const term = typeof FIELD_HELP !== "undefined" && FIELD_HELP[key];
+      const help = term && GLOSSARY[term] ? el("a", { class: "help", href: `tutorial.html#term=${encodeURIComponent(term)}`, target: "_blank", rel: "noopener", title: `${term}: ${GLOSSARY[term].d}`, "aria-label": `What is ${term}?`, text: "?" }) : null;
+      const head = el("span", {}, [document.createTextNode(label + (type === "pct" ? " (%)" : "") + ((REQUIRED[kind] || []).includes(key) ? " *" : "")), help]);
+      grid.append(el("label", { class: type === "rounds" || type === "list" ? "wide" : null }, [head, hint ? el("small", { text: hint }) : null, input]));
     }
     form.append(el("div", { class: "group" }, [el("div", { text: title }), grid]));
   }
@@ -516,6 +604,24 @@ function selectKind(k) {
   $("start-last").classList.toggle("hidden", !last);
   if (last) $("last-note").textContent = `${last.inputs.name || spec.title} · saved ${new Date(last.at).toLocaleString()}`;
   try { localStorage.setItem("invesha-kind", k); } catch (_) {}
+  renderSamples();
+}
+
+function renderSamples() {
+  const grid = $("sample-grid"); if (!grid) return;
+  grid.replaceChildren(...(SAMPLES[kind] || []).map(sm => {
+    const b = el("button", { class: "sample-card", type: "button" }, [el("span", { class: "tg", text: sm.tag }), el("b", { text: sm.title }), el("p", { text: sm.blurb })]);
+    b.onclick = () => openSample(kind, sm.id);
+    return b;
+  }));
+}
+
+function openSample(k, id, autoBuild = true) {
+  const sm = (SAMPLES[k] || []).find(x => x.id === id); if (!sm) return false;
+  if (kind !== k) selectKind(k);
+  openForm({ ...DEFAULTS[k], ...sm.inputs }, `Sample loaded: ${sm.title} (fictional). Change any assumption, then rebuild.`);
+  if (autoBuild) build();
+  return true;
 }
 
 function openForm(data, banner) {
@@ -558,6 +664,37 @@ function showFound(res, filename) {
   box.classList.remove("hidden");
   for (const k of res.missing) { const n = $("f_" + k); if (n) n.classList.add("missing"); }
   if (res.missing.length) { const n = $("f_" + res.missing[0]); if (n) setTimeout(() => n.focus({ preventScroll: true }), 400); }
+}
+
+// ------------------------------------------------------------ my models
+const LEARN_FOR = { company: "fcf", project: "pf-basics", startup: "unit-economics", merger: "accretion" };
+function modelsKey() { return `invesha-models-${user && user.email ? user.email : "guest"}`; }
+function listModels() { try { return JSON.parse(store()?.getItem(modelsKey()) || "[]"); } catch (_) { return []; } }
+function putModels(list) { try { store()?.setItem(modelsKey(), JSON.stringify(list)); } catch (_) { msg("Could not save: browser storage is blocked.", true); } renderMyModels(); }
+function saveModel() {
+  if (!lastReport || !lastInputs) return;
+  const name = prompt("Name this model", `${lastReport.title} · ${FORMS[kind].title}`);
+  if (!name) return;
+  const list = listModels();
+  list.unshift({ id: Date.now().toString(36), kind, name: name.trim().slice(0, 90), inputs: lastInputs, verdict: lastReport.verdict, savedAt: Date.now() });
+  putModels(list.slice(0, 100));
+  msg(`Saved “${name}” to My models.`);
+}
+function renderMyModels() {
+  const list = listModels(), box = $("models-list"), panel = $("mymodels");
+  panel.classList.toggle("hidden", !list.length);
+  $("mymodels-note").textContent = user && user.email ? `Saved for ${user.email} on this device.` : "Guest models are kept in this browser only. Create an account to keep them under your name.";
+  box.replaceChildren(...list.map(mo => {
+    const open = el("button", { class: "btn", type: "button", text: "Open" });
+    open.onclick = () => { selectKind(mo.kind); openForm(mo.inputs, `Opened “${mo.name}”.`); build(); };
+    const dup = el("button", { class: "btn", type: "button", text: "Duplicate" });
+    dup.onclick = () => { const l = listModels(); l.unshift({ ...mo, id: Date.now().toString(36), name: mo.name + " (copy)", savedAt: Date.now() }); putModels(l); };
+    const del = el("button", { class: "btn danger", type: "button", text: "Delete" });
+    del.onclick = () => { if (confirm(`Delete “${mo.name}”?`)) putModels(listModels().filter(x => x.id !== mo.id)); };
+    return el("div", { class: "model-row" }, [el("div", {}, [el("b", { text: mo.name }), el("br"),
+      el("span", { text: `${(FORMS[mo.kind] || { title: mo.kind }).title} · ${mo.verdict || ""} · saved ${new Date(mo.savedAt).toLocaleString()}` })]),
+      el("div", { class: "acts" }, [open, dup, del])]);
+  }));
 }
 
 // ------------------------------------------------------------ per-user storage
@@ -615,6 +752,7 @@ function render(r) {
     el("div", { class: "a", text: x.area }), el("div", { class: "h", text: x.title }), el("p", { text: x.detail }),
     x.actions.length ? el("ul", {}, x.actions.map(a => el("li", { text: a }))) : null]));
   const dl = el("div", { class: "actions no-print" }, [
+    el("button", { class: "btn", type: "button", id: "save-model" }, [icon("i-save"), document.createTextNode("Save to My models")]),
     el("button", { class: "btn xl", type: "button", id: "dl-xlsx" }, [icon("i-sheet"), document.createTextNode("Download Excel model")]),
     el("button", { class: "btn", type: "button", id: "dl-json" }, [icon("i-download"), document.createTextNode("JSON")]),
     el("button", { class: "btn", type: "button", id: "dl-print" }, [icon("i-file"), document.createTextNode("Print / PDF")])]);
@@ -623,13 +761,17 @@ function render(r) {
       el("div", {}, [el("span", { class: "eyebrow", text: "Step 4 · Report" }), el("h2", { text: r.title }), el("p", { class: "blurb", style: "margin:0", text: r.subtitle })]), dl]),
     el("div", { class: "verdict" }, [el("div", { class: "v " + (r.verdict_tone || ""), text: r.verdict }), el("p", { text: r.verdict_note })]),
     r.summary && r.summary.length ? el("div", { class: "summary" }, [el("h4", { text: "Executive summary" }), el("ul", {}, r.summary.map(x => el("li", { text: x })))]) : null,
+    user && user.level === "Beginner" ? el("p", { class: "learn-link", style: "margin:10px 0 0" }, [document.createTextNode("New to these terms? "), el("a", { href: `tutorial.html#lesson=${LEARN_FOR[kind]}`, target: "_blank", text: "Learn how this model works in the Academy" }), document.createTextNode(" · hover the ? next to any input for a definition.")]) : null,
     el("h3", { class: "sec", text: "Key figures" }), tiles,
     el("h3", { class: "sec", text: "Charts" }), charts,
     el("h3", { class: "sec", text: "Investment view and suggestions" }), ...sugg,
+    r.next_steps && r.next_steps.length ? el("h3", { class: "sec", text: "Recommended next steps" }) : null,
+    r.next_steps && r.next_steps.length ? el("ol", { class: "steps" }, r.next_steps.map(x => el("li", { text: x }))) : null,
     el("h3", { class: "sec", text: "Financial model" }), tabs, tables, showAll,
     el("p", { class: "disclaimer", text: `Amounts in ${cur} ${unit}. Sector multiples, betas and ranges are indicative screening values; check them against current market data. This is analysis for discussion, not investment advice.` }));
   rep.classList.remove("hidden");
   $("dl-xlsx").onclick = downloadExcel;
+  $("save-model").onclick = () => saveModel();
   $("dl-json").onclick = () => download(fileName("json"), new Blob([JSON.stringify({ inputs: lastInputs, report: lastReport }, null, 2)], { type: "application/json" }));
   $("dl-print").onclick = () => { tblNodes.forEach(n => n.classList.remove("hidden")); window.print(); };
   rep.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -787,7 +929,7 @@ from invesha.fields import FORMS
 from invesha.project import ProjectInputs
 from invesha.startup import StartupInputs
 from invesha.core import InputError
-from invesha.examples import EXAMPLES
+from invesha.examples import EXAMPLES, SAMPLES
 from invesha.sectors import SECTORS
 
 def clean(x):
@@ -812,7 +954,7 @@ def defaults(cls):
     return {f.name: f.default for f in dc_fields(cls) if f.default is not MISSING and f.default is not None}
 
 def meta():
-    return wrap(lambda: {"sectors": [[k, s.name] for k, s in SECTORS.items()], "examples": EXAMPLES, "forms": FORMS,
+    return wrap(lambda: {"sectors": [[k, s.name] for k, s in SECTORS.items()], "examples": EXAMPLES, "forms": FORMS, "samples": SAMPLES,
                          "defaults": {"company": defaults(CompanyInputs), "project": defaults(ProjectInputs),
                                       "startup": defaults(StartupInputs), "merger": defaults(MergerInputs)},
                          "required": {"company": required(CompanyInputs), "project": required(ProjectInputs),
@@ -841,10 +983,11 @@ async function boot() {
     await pyodide.loadPackage("micropip");
     await pyodide.pyimport("micropip").install(new URL(manifest.wheel, location.href).href);
     py = pyodide.runPython(GLUE).toJs({ dict_converter: Object.fromEntries });
-    const m = call("meta"); sectors = m.sectors; examples = m.examples; FORMS = m.forms; DEFAULTS = m.defaults; REQUIRED = m.required;
+    const m = call("meta"); sectors = m.sectors; examples = m.examples; FORMS = m.forms; DEFAULTS = m.defaults; REQUIRED = m.required; SAMPLES = m.samples;
     $("run").disabled = false;
     setStatus(`Engine ${manifest.version} ready`, "ready");
     if (pendingKind) { selectKind(pendingKind); pendingKind = null; }
+    tryPendingSample();
   } catch (e) { console.error(e); setStatus("Engine failed to load", "fail"); srcMsg("Could not load the engine: " + e.message, true); }
 }
 
@@ -862,6 +1005,7 @@ function setMode(m) {
   mode = m;
   $("tab-in").setAttribute("aria-selected", String(m === "in")); $("tab-up").setAttribute("aria-selected", String(m === "up"));
   $("name-row").classList.toggle("hidden", m === "in"); $("confirm-row").classList.toggle("hidden", m === "in");
+  $("profile-rows").classList.toggle("hidden", m === "in"); $("meter").classList.toggle("hidden", m === "in"); $("meter-note").classList.toggle("hidden", m === "in");
   $("auth-title").textContent = m === "in" ? "Welcome back" : "Create your account";
   $("auth-sub").textContent = m === "in" ? "Sign in to continue to AutoModel." : "It takes ten seconds. Your data stays on this device.";
   $("auth-submit").textContent = m === "in" ? "Sign in" : "Create account";
@@ -876,6 +1020,9 @@ function startSession(u, remember) {
 }
 function enterApp() {
   $("auth").classList.add("hidden"); $("app").classList.remove("hidden");
+  renderMyModels();
+  $("academy-strip").classList.toggle("hidden", user.level === "Professional");
+  tryPendingSample();
   const name = user.name || "Guest";
   $("user-name").textContent = name; $("avatar").textContent = name.trim().slice(0, 1).toUpperCase() || "G";
   if (user.email) $("hello").textContent = `Welcome back, ${name.split(" ")[0]}.`;
@@ -902,16 +1049,96 @@ $("auth-form").addEventListener("submit", async e => {
     if (pass !== $("a-pass2").value) return authMsg("The passwords do not match.");
     if (all[email]) return authMsg("An account with this email already exists on this device. Sign in instead.");
     const salt = [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, "0")).join("");
-    all[email] = { name, salt, hash: await hash(salt, pass), created: Date.now() };
+    if (strength(pass) < 2) return authMsg("Choose a stronger password: mix letters, numbers and symbols.");
+    const profile = { org: $("a-org").value.trim(), role: $("a-role").value, level: $("a-level").value };
+    all[email] = { name, salt, hash: await hash(salt, pass), created: Date.now(), ...profile };
     try { store().setItem(USERS, JSON.stringify(all)); } catch (_) { return authMsg("This browser is blocking storage; use 'Continue as guest'."); }
-    startSession({ email, name }, remember);
+    startSession({ email, name, ...profile }, remember);
   } else {
     const rec = all[email];
     if (!rec || rec.hash !== await hash(rec.salt, pass)) return authMsg("Email or password is incorrect.");
-    startSession({ email, name: rec.name }, remember);
+    startSession({ email, name: rec.name, org: rec.org || "", role: rec.role || "", level: rec.level || "Professional" }, remember);
   }
 });
-$("guest").addEventListener("click", () => startSession({ email: null, name: "Guest" }, false));
+$("guest").addEventListener("click", () => startSession({ email: null, name: "Guest", level: "Beginner" }, false));
+
+// password strength and visibility
+function strength(pw) {
+  let sc = 0;
+  if (pw.length >= 8) sc++; if (pw.length >= 12) sc++;
+  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) sc++; if (/\d/.test(pw)) sc++; if (/[^\w\s]/.test(pw)) sc++;
+  return Math.min(4, Math.max(0, sc - (pw.length < 8 ? 2 : 0)));
+}
+$("a-pass").addEventListener("input", e => {
+  authMsg("");
+  if (mode !== "up") return;
+  const sc = strength(e.target.value), cols = ["#f2555a", "#f2555a", "#f0b429", "#3ecf8e", "#3ecf8e"], names = ["Too weak", "Weak", "Fair", "Strong", "Very strong"];
+  $("meter-bar").style.width = (e.target.value ? (sc + 1) * 20 : 0) + "%"; $("meter-bar").style.background = cols[sc];
+  $("meter-note").textContent = e.target.value ? `${names[sc]} · use 12+ characters with upper and lower case, numbers and a symbol` : "";
+});
+$("pw-toggle").addEventListener("click", () => {
+  const show = $("a-pass").type === "password";
+  for (const id of ["a-pass", "a-pass2"]) $(id).type = show ? "text" : "password";
+  $("pw-toggle").textContent = show ? "Hide" : "Show";
+});
+
+// account panel
+function openAccount() {
+  const guest = !user || !user.email;
+  $("acc-guest").classList.toggle("hidden", !guest); $("acc-user").classList.toggle("hidden", guest);
+  if (!guest) {
+    const rec = users()[user.email] || {};
+    $("p-name").value = rec.name || user.name || ""; $("p-email").value = user.email; $("p-org").value = rec.org || "";
+    $("p-role").value = rec.role || "Analyst"; $("p-level").value = rec.level || "Professional";
+    for (const id of ["p-msg", "c-msg"]) $(id).textContent = "";
+    $("c-old").value = ""; $("c-new").value = "";
+  }
+  $("account").showModal();
+}
+function persistSession() {
+  try { if (localStorage.getItem(SESSION)) localStorage.setItem(SESSION, JSON.stringify(user)); else sessionStorage.setItem(SESSION, JSON.stringify(user)); } catch (_) {}
+}
+$("account-btn").addEventListener("click", openAccount);
+$("acc-close").addEventListener("click", () => $("account").close());
+$("acc-create").addEventListener("click", () => { $("account").close(); signOut(); setMode("up"); });
+$("p-save").addEventListener("click", () => {
+  const all = users(), rec = all[user.email]; if (!rec) return;
+  const name = $("p-name").value.trim(); if (!name) { $("p-msg").textContent = "Name cannot be empty."; return; }
+  Object.assign(rec, { name, org: $("p-org").value.trim(), role: $("p-role").value, level: $("p-level").value });
+  store().setItem(USERS, JSON.stringify(all));
+  Object.assign(user, { name, org: rec.org, role: rec.role, level: rec.level }); persistSession(); enterApp();
+  $("p-msg").textContent = "Saved.";
+});
+$("c-save").addEventListener("click", async () => {
+  const all = users(), rec = all[user.email]; if (!rec) return;
+  if (rec.hash !== await hash(rec.salt, $("c-old").value)) { $("c-msg").textContent = "Current password is incorrect."; return; }
+  const np = $("c-new").value;
+  if (np.length < 8 || strength(np) < 2) { $("c-msg").textContent = "Choose a stronger new password (8+ characters, mixed)."; return; }
+  rec.salt = [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, "0")).join("");
+  rec.hash = await hash(rec.salt, np); store().setItem(USERS, JSON.stringify(all));
+  $("c-old").value = ""; $("c-new").value = ""; $("c-msg").textContent = "Password updated.";
+});
+$("d-export").addEventListener("click", () => {
+  const rec = { ...(users()[user.email] || {}) }; delete rec.hash; delete rec.salt;
+  let learning = null; try { learning = JSON.parse(localStorage.getItem(`invesha-learn-${user.email}`) || "null"); } catch (_) {}
+  download(`invesha-${user.email.replace(/[^\w]+/g, "-")}-data.json`, new Blob([JSON.stringify({ exported: new Date().toISOString(), profile: { email: user.email, ...rec }, models: listModels(), learning }, null, 2)], { type: "application/json" }));
+});
+$("d-delete").addEventListener("click", () => {
+  if (!confirm("Delete your account and all its saved models and progress from this device? This cannot be undone.")) return;
+  const all = users(); delete all[user.email]; store().setItem(USERS, JSON.stringify(all));
+  for (const k of [modelsKey(), `invesha-learn-${user.email}`]) try { localStorage.removeItem(k); } catch (_) {}
+  for (const k of Object.keys(FORMS)) try { localStorage.removeItem(`invesha-last-${user.email}-${k}`); } catch (_) {}
+  $("account").close(); signOut();
+});
+
+// deep link: ?sample=company:saas (used by the Academy's "Try it" buttons)
+let pendingSample = new URLSearchParams(location.search).get("sample");
+function tryPendingSample() {
+  if (!pendingSample || !py || !user) return;
+  const [k, id] = pendingSample.split(":"); pendingSample = null;
+  history.replaceState(null, "", location.pathname);
+  if (FORMS[k] && openSample(k, id)) setTimeout(() => $("report").scrollIntoView({ behavior: "smooth" }), 300);
+}
 $("signout").addEventListener("click", signOut);
 
 // ------------------------------------------------------------ app events

@@ -329,6 +329,25 @@ def analyse(p: StartupInputs) -> Report:
         ["Fixed costs / month", p.fixed_costs, "money"],
         ["Starting cash", p.cash, "money"],
     ]
+    steps = []
+    if runway is not None:
+        steps.append(
+            f"Start fundraising now: build a pipeline of 30-50 investors and target a close by month {raise_by}, "
+            f"raising about {cur}{need:,.0f} {unit}."
+        )
+    steps += [
+        "Build a cohort analysis (retention and revenue by signup month) to prove churn and expansion "
+        "assumptions with real data.",
+        "Prepare the data room: this model, monthly MIS, cap table, customer contracts and unit-economics backup.",
+    ]
+    if ltv_cac < 3:
+        steps.append("Fix unit economics before scaling spend: find the channels where CAC payback is under 12 months.")
+    else:
+        steps.append("Unit economics support scaling: model a faster hiring plan and its effect on runway.")
+    steps.append(
+        "Benchmark the valuation against recent comparable rounds and agree the round size that funds "
+        "18-24 months to the next milestone."
+    )
     return Report(
         kind="startup",
         title=p.name,
@@ -343,6 +362,7 @@ def analyse(p: StartupInputs) -> Report:
         tables=tables,
         suggestions=suggestions,
         assumptions=assumptions,
+        next_steps=steps,
         data={
             "runway": runway,
             "breakeven": breakeven,

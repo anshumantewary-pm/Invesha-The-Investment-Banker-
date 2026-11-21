@@ -6,6 +6,14 @@
 
 Everything runs in the browser (the Python engine is loaded with Pyodide), so nothing you enter leaves your machine.
 
+## What's in the platform
+
+- **Four models**: company valuation, project finance, startup finance and M&A accretion / dilution.
+- **Sample library**: fictional companies, projects, startups and deals (a BUY, HOLD and REDUCE case, a restructure and an invest case, accretive and dilutive deals), loadable in one click, plus sample financial-statement files to try the automatic upload.
+- **Recommended next steps** in every report, specific to the result (what a deal team would do next).
+- **Accounts**: sign up with organisation, role and experience level; password strength check; profile and password changes; export or delete your data; **My models** to save, reopen, duplicate and delete named models. Beginners get "?" definitions on every input and links into the Academy.
+- **Invesha Academy** (`tutorial.html`): 12 modules and 21 lessons from the three financial statements to LBOs, M&A, project finance, credit and banker-grade modelling practice. Every lesson explains the vocabulary, gives the formulas, works an example with the platform's numbers, adds a banker-level note and links to a live model ("Try it"). Module quizzes, an 80+ term searchable glossary and progress tracking per account.
+
 ## How it works
 
 1. **Sign in** (or create an account, or continue as a guest).

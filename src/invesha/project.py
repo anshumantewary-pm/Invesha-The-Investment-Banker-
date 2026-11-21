@@ -415,6 +415,31 @@ def analyse(p: ProjectInputs) -> Report:
         ["Target DSCR", p.target_dscr, "x"],
         ["Tax rate", p.tax_rate, "pct"],
     ]
+    steps = [
+        "Commission an independent engineer's report and re-run the model on P90 (1-in-10 downside) output, "
+        "the case lenders size debt on."
+    ]
+    if not bankable or (r.min_dscr or 0) < p.target_dscr:
+        steps.append(
+            "Restructure the debt: longer tenor, sculpted repayment or a debt service reserve account (DSRA) "
+            "until minimum DSCR clears 1.20x in the downside case."
+        )
+    if not hurdle_ok and breakeven_price:
+        steps.append(
+            f"Negotiate the offtake price towards {_price(cur, breakeven_price)} per unit, or seek viability-gap "
+            "funding, before committing equity."
+        )
+    else:
+        steps.append(
+            "Lock in the revenue with a long-term offtake / PPA and fix the construction price with a "
+            "date-certain EPC contract."
+        )
+    steps += [
+        "Approach 3-4 lenders with an information memorandum and this model; agree a term sheet "
+        "(margin, tenor, DSCR covenants, reserve accounts).",
+        "Hedge interest-rate risk with a swap from financial close and add the hedge cost to the model.",
+        "Prepare the financial-close checklist: permits, land, insurance, model audit and lender due diligence.",
+    ]
     return Report(
         kind="project",
         title=p.name,
@@ -429,6 +454,7 @@ def analyse(p: ProjectInputs) -> Report:
         tables=tables,
         suggestions=suggestions,
         assumptions=assumptions,
+        next_steps=steps,
         data={
             "equity_irr": r.equity_irr,
             "project_irr": r.project_irr,
