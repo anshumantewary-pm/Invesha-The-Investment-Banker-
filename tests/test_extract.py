@@ -1,6 +1,6 @@
 import pytest
 
-from invesha.extract import classify
+from invesha.extract import _chronological, _is_period, classify
 
 
 @pytest.mark.parametrize(
@@ -42,3 +42,19 @@ def test_classify_common_line_items(label, concept):
 )
 def test_classify_rejects_look_alikes(label):
     assert classify(label) not in ("revenue", "cash")
+
+
+@pytest.mark.parametrize("cell", ["FY24", "FY2024", "2023-24", "Mar-24", "Q1FY25", "Jan-24", 2024.0, "M12", "2024 (A)"])
+def test_period_headers(cell):
+    assert _is_period(cell)
+
+
+@pytest.mark.parametrize("cell", ["24", 24.0, "Revenue", 1500.0, None])
+def test_not_periods(cell):
+    assert not _is_period(cell)
+
+
+def test_chronological_ordering():
+    assert _chronological(["2023-24", "2021-22", "2022-23"]) == [1, 2, 0]
+    assert _chronological(["Mar-24", "Jan-24", "Feb-24"]) == [1, 2, 0]
+    assert _chronological(["a", "b"]) == [0, 1]
