@@ -92,10 +92,11 @@ def test_every_form_field_exists_on_its_inputs_dataclass():
     from dataclasses import fields as dc_fields
 
     from invesha.corporate import CompanyInputs
+    from invesha.merger import MergerInputs
     from invesha.project import ProjectInputs
     from invesha.startup import StartupInputs
 
-    classes = {"company": CompanyInputs, "project": ProjectInputs, "startup": StartupInputs}
+    classes = {"company": CompanyInputs, "project": ProjectInputs, "startup": StartupInputs, "merger": MergerInputs}
     for kind in FORMS:
         names = {f.name for f in dc_fields(classes[kind])}
         assert {f[0] for f in fields(kind)} <= names

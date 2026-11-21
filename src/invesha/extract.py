@@ -777,7 +777,7 @@ def derive_project(f: Found) -> tuple[dict[str, Any], list[Trace]]:
     return out, trace
 
 
-DERIVE = {"company": derive_company, "startup": derive_startup, "project": derive_project}
+DERIVE = {"company": derive_company, "startup": derive_startup, "project": derive_project, "merger": lambda f: ({}, [])}
 
 
 def text_fields(f: Found) -> tuple[dict[str, Any], list[Trace]]:

@@ -177,6 +177,67 @@ FORMS: dict[str, dict[str, Any]] = {
     },
 }
 
+FORMS["merger"] = {
+    "title": "M&A accretion / dilution",
+    "blurb": "An acquirer buys a target at a premium, paying in stock, new debt and cash. Percentages in %. Amounts in one unit.",
+    "groups": [
+        [
+            "Deal",
+            [
+                ["name", "Deal name", "text"],
+                ["acquirer_name", "Acquirer name", "text"],
+                ["target_name", "Target name", "text"],
+                ["currency", "Currency", "currency"],
+                ["unit", "Amount unit", "text"],
+            ],
+        ],
+        [
+            "Acquirer",
+            [
+                ["acquirer_net_income", "Acquirer net income (last year)", "num"],
+                ["acquirer_shares", "Acquirer shares outstanding", "num"],
+                ["acquirer_share_price", "Acquirer share price", "num"],
+                ["acquirer_growth", "Acquirer net income growth", "pct"],
+                ["acquirer_ebitda", "Acquirer EBITDA", "num", "optional, for leverage"],
+                ["acquirer_net_debt", "Acquirer net debt", "num"],
+            ],
+        ],
+        [
+            "Target",
+            [
+                ["target_net_income", "Target net income (last year)", "num"],
+                ["target_shares", "Target shares outstanding", "num"],
+                ["target_share_price", "Target share price (undisturbed)", "num"],
+                ["target_growth", "Target net income growth", "pct"],
+                ["target_ebitda", "Target EBITDA", "num", "optional, for leverage"],
+                ["target_net_debt", "Target net debt", "num"],
+            ],
+        ],
+        [
+            "Offer and financing",
+            [
+                ["premium", "Offer premium", "pct"],
+                ["pct_stock", "Paid in stock", "pct"],
+                ["pct_debt", "Paid with new debt", "pct", "the rest is cash"],
+                ["cost_of_debt", "Cost of new debt", "pct"],
+                ["interest_on_cash", "Interest forgone on cash", "pct"],
+                ["fees_pct", "Fees, % of price", "pct"],
+            ],
+        ],
+        [
+            "Synergies and accounting",
+            [
+                ["synergies", "Run-rate synergies (pre-tax)", "num"],
+                ["synergy_phase_in", "Synergies achieved in year 1", "pct"],
+                ["integration_costs", "One-off integration costs", "num"],
+                ["ppa_amortisation", "Intangibles amortisation / year", "num"],
+                ["tax_rate", "Tax rate", "pct"],
+            ],
+        ],
+    ],
+}
+
+
 # Extra names a column/row may use for a field (e.g. the labels on the Excel Inputs sheet).
 ALIASES: dict[str, list[str]] = {
     "growth": ["Growth per year", "Revenue growth by year", "Growth path"],

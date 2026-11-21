@@ -233,10 +233,11 @@ def required_fields(kind: str) -> list[str]:
     from dataclasses import fields as dc_fields
 
     from invesha.corporate import CompanyInputs
+    from invesha.merger import MergerInputs
     from invesha.project import ProjectInputs
     from invesha.startup import StartupInputs
 
-    cls = {"company": CompanyInputs, "project": ProjectInputs, "startup": StartupInputs}[kind]
+    cls = {"company": CompanyInputs, "project": ProjectInputs, "startup": StartupInputs, "merger": MergerInputs}[kind]
     return [f.name for f in dc_fields(cls) if f.default is MISSING and f.default_factory is MISSING]
 
 

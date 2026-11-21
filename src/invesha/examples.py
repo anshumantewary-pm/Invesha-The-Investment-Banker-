@@ -76,4 +76,35 @@ STARTUP: dict[str, Any] = {
     "target_return": 10.0,
 }
 
-EXAMPLES = {"company": COMPANY, "project": PROJECT, "startup": STARTUP}
+MERGER: dict[str, Any] = {
+    "name": "Northstar / Delta Precision",
+    "acquirer_name": "Northstar Components",
+    "target_name": "Delta Precision",
+    "currency": "₹",
+    "unit": "Cr",
+    "acquirer_net_income": 92.25,
+    "acquirer_shares": 10.0,
+    "acquirer_share_price": 210.0,
+    "acquirer_growth": 0.10,
+    "target_net_income": 18.0,
+    "target_shares": 4.0,
+    "target_share_price": 60.0,
+    "target_growth": 0.12,
+    "premium": 0.30,
+    "pct_stock": 0.50,
+    "pct_debt": 0.30,
+    "cost_of_debt": 0.095,
+    "interest_on_cash": 0.06,
+    "tax_rate": 0.25,
+    "synergies": 15.0,
+    "synergy_phase_in": 0.50,
+    "integration_costs": 10.0,
+    "fees_pct": 0.02,
+    "ppa_amortisation": 4.0,
+    "acquirer_ebitda": 204.0,
+    "target_ebitda": 36.0,
+    "acquirer_net_debt": 260.0,
+    "target_net_debt": 20.0,
+}
+
+EXAMPLES = {"company": COMPANY, "project": PROJECT, "startup": STARTUP, "merger": MERGER}

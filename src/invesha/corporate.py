@@ -25,7 +25,6 @@ from invesha.core import (
     check,
     fade,
     from_dict,
-    irr,
     number,
     sort_suggestions,
 )
@@ -65,6 +64,9 @@ class CompanyInputs:
     lbo_leverage: float = 4.0  # debt / LTM EBITDA
     lbo_interest_rate: float = 0.11
     invested_capital: float | None = None  # for ROIC
+    bear_probability: float = 0.25  # scenario weights; base gets the rest
+    bull_probability: float = 0.25
+    simulations: int = 2000  # Monte Carlo runs
 
 
 @dataclass
@@ -253,36 +255,15 @@ class Lbo:
 
 
 def lbo(p: CompanyInputs, proj: Projection, sector: Sector) -> Lbo | None:
-    ltm_ebitda = p.revenue * p.ebitda_margin
-    if ltm_ebitda <= 0:
+    """Sponsor returns from the detailed LBO (senior + junior debt, amortisation, cash sweep)."""
+    from invesha.advanced import lbo_model
+
+    d = lbo_model(p, proj, sector)
+    if d is None:
         return None
-    entry_mult = p.lbo_entry_multiple or sector.ev_ebitda[1]
-    exit_mult = p.exit_multiple or entry_mult
-    ev = entry_mult * ltm_ebitda
-    debt = min(p.lbo_leverage * ltm_ebitda, 0.75 * ev)
-    equity = ev - debt + 0.02 * ev  # 2% fees funded with equity
-    cash, path = 0.0, []
-    for i in range(len(proj.revenue)):
-        interest = debt * p.lbo_interest_rate
-        tax = max(proj.ebit[i] - interest, 0.0) * p.tax_rate
-        levered_fcf = proj.ebitda[i] - proj.capex[i] - proj.delta_nwc[i] - tax - interest
-        repay = min(max(levered_fcf, 0.0), debt)
-        debt -= repay
-        cash += levered_fcf - repay
-        path.append(debt)
-    exit_ev = exit_mult * proj.ebitda[-1]
-    exit_equity = max(exit_ev - debt + cash, 0.0)
-    flows = [-equity] + [0.0] * (len(proj.revenue) - 1) + [exit_equity]
+    debt_path = [s + j for s, j in zip(d.senior_bal, d.junior_bal)]
     return Lbo(
-        ev,
-        min(p.lbo_leverage * ltm_ebitda, 0.75 * ev),
-        equity,
-        exit_ev,
-        debt,
-        exit_equity,
-        irr(flows),
-        exit_equity / equity if equity else 0.0,
-        path,
+        d.entry_ev, d.senior + d.junior, d.equity, d.exit_ev, d.exit_debt, d.exit_equity, d.irr, d.moic, debt_path
     )
 
 
@@ -649,7 +630,7 @@ def analyse(p: CompanyInputs) -> Report:
         ["Terminal growth", p.terminal_growth, "pct"],
         ["Exit EV/EBITDA", exit_mult, "x"],
     ]
-    return Report(
+    report = Report(
         kind="company",
         title=p.name,
         subtitle=f"{sector.name} · {p.years}-year model · {cur} {unit}",
@@ -673,6 +654,9 @@ def analyse(p: CompanyInputs) -> Report:
             "fcff": proj.fcff,
         },
     )
+    from invesha.advanced import enrich
+
+    return enrich(report, p, sector, proj, w, d, comps, net_debt, mcap)
 
 
 def _grid_values(grid: list[list[Any]], shares: float | None, net_debt: float) -> list[float]:

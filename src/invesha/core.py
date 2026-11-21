@@ -183,6 +183,7 @@ class Report:
     tables: list[Table] = field(default_factory=list)
     suggestions: list[Suggestion] = field(default_factory=list)
     assumptions: list[list[Any]] = field(default_factory=list)  # [label, value, fmt]
+    summary: list[str] = field(default_factory=list)  # executive summary / investment thesis bullets
     data: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:

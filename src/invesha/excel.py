@@ -15,7 +15,7 @@ from __future__ import annotations
 from dataclasses import asdict
 from typing import Any
 
-from invesha import corporate, project, startup
+from invesha import corporate, merger, project, startup
 from invesha.core import Report, from_dict
 from invesha.fields import fields
 from invesha.inputs_io import _display, _lookup, _norm
@@ -50,6 +50,8 @@ def build(kind: str, data: dict[str, Any]) -> bytes:
         return project_workbook(data)
     if kind == "startup":
         return startup_workbook(data)
+    if kind == "merger":
+        return merger_workbook(data)
     raise ValueError(f"unknown model {kind!r}")
 
 
@@ -65,6 +67,14 @@ def summary_sheet(wb: Workbook, report: Report) -> Sheet:
     s.set(4, 2, report.verdict, BOLD)
     s.set(5, 1, report.verdict_note, TEXT)
     row = 7
+    if report.summary:
+        s.set(row, 1, "Executive summary", HEADER)
+        s.set(row, 2, "", HEADER)
+        s.set(row, 3, "", HEADER)
+        for line in report.summary:
+            row += 1
+            s.set(row, 1, f"• {line}")
+        row += 2
     s.set(row, 1, "Key figures", HEADER)
     s.set(row, 2, "Value", HEADER)
     s.set(row, 3, "Note", HEADER)
@@ -701,6 +711,111 @@ def project_workbook(data: dict[str, Any]) -> bytes:
         "sculpting (re-run the model on the web platform to re-size debt).",
         NOTE,
     )
+    report_tables(wb, report)
+    suggestions_sheet(wb, report)
+    return wb.to_bytes()
+
+
+# ---------------------------------------------------------------- merger
+
+
+def merger_workbook(data: dict[str, Any]) -> bytes:
+    p = from_dict(merger.MergerInputs, data)
+    report = merger.analyse(p)
+    d = merger.model(p)
+    wb = Workbook()
+    summary_sheet(wb, report)
+    ins = Inputs(wb, f"{p.name}: inputs ({p.currency} {p.unit})")
+    ins.section("Acquirer figures")
+    for key, label, fmt in (
+        ("acquirer_net_income", "Acquirer net income (last year)", "money"),
+        ("acquirer_shares", "Acquirer shares outstanding", "num"),
+        ("acquirer_share_price", "Acquirer share price", "num"),
+        ("acquirer_growth", "Acquirer net income growth", "pct"),
+    ):
+        ins.add(key, label, getattr(p, key), fmt)
+    ins.section("Target figures")
+    for key, label, fmt in (
+        ("target_net_income", "Target net income (last year)", "money"),
+        ("target_shares", "Target shares outstanding", "num"),
+        ("target_share_price", "Target share price (undisturbed)", "num"),
+        ("target_growth", "Target net income growth", "pct"),
+    ):
+        ins.add(key, label, getattr(p, key), fmt)
+    ins.section("Offer, financing and synergies")
+    for key, label, fmt in (
+        ("premium", "Offer premium", "pct"),
+        ("pct_stock", "Paid in stock", "pct"),
+        ("pct_debt", "Paid with new debt", "pct"),
+        ("cost_of_debt", "Cost of new debt", "pct"),
+        ("interest_on_cash", "Interest forgone on cash", "pct"),
+        ("fees_pct", "Fees, % of price", "pct"),
+        ("synergies", "Run-rate synergies (pre-tax)", "money"),
+        ("synergy_phase_in", "Synergies achieved in year 1", "pct"),
+        ("ppa_amortisation", "Intangibles amortisation / year", "money"),
+        ("tax_rate", "Tax rate", "pct"),
+    ):
+        ins.add(key, label, getattr(p, key), fmt)
+    settings_section(ins, "merger", asdict(p))
+    i = ins
+    m = wb.add("Accretion model")
+    m.widths = {1: 46, 2: 16, 3: 16}
+    m.set(1, 1, f"{p.name}: accretion / dilution ({p.currency} {p.unit})", TITLE)
+    rows = [
+        ("Offer price per share", f"={i['target_share_price']}*(1+{i['premium']})", d.offer_price, DEC),
+        ("Equity purchase price", f"=B3*{i['target_shares']}", d.purchase_price, NUM),
+        ("Fees", f"=B4*{i['fees_pct']}", d.fees, NUM),
+        ("Paid in stock", f"=B4*{i['pct_stock']}", d.stock, NUM),
+        ("Paid with new debt", f"=B4*{i['pct_debt']}", d.debt, NUM),
+        ("Paid from cash (incl. fees)", "=B4-B6-B7+B5", d.cash, NUM),
+        ("New shares issued", f"=B6/{i['acquirer_share_price']}", d.new_shares, DEC),
+        ("Pro forma shares", f"={i['acquirer_shares']}+B9", d.pf_shares, DEC),
+    ]
+    for r, (label, f, cached, style) in enumerate(rows, 3):
+        m.set(r, 1, label)
+        m.formula(r, 2, f, cached, style)
+    m.set(12, 1, "", HEADER)
+    m.set(12, 2, "Year 1", HEADER)
+    m.set(12, 3, "Year 2", HEADER)
+    labels = [
+        "Acquirer net income",
+        "Target net income",
+        "After-tax synergies",
+        "After-tax financing, forgone interest & amortisation",
+        "Pro forma net income",
+        "Pro forma EPS",
+        "Standalone EPS",
+        "Accretion / (dilution)",
+    ]
+    for k, label in enumerate(labels):
+        m.set(13 + k, 1, label, BOLD if label.startswith(("Pro forma", "Accretion")) else TEXT)
+    for c, year in ((2, 1), (3, 2)):
+        L = col_letter(c)  # noqa: N806
+        part = d.parts[year - 1]
+        phase = f"{i['synergy_phase_in']}" if year == 1 else "1"
+        m.formula(13, c, f"={i['acquirer_net_income']}*(1+{i['acquirer_growth']})^{year}", part["acquirer"])
+        m.formula(14, c, f"={i['target_net_income']}*(1+{i['target_growth']})^{year}", part["target"])
+        m.formula(15, c, f"={i['synergies']}*{phase}*(1-{i['tax_rate']})", part["synergies"])
+        m.formula(
+            16,
+            c,
+            f"=-(B7*{i['cost_of_debt']}+B8*{i['interest_on_cash']}+{i['ppa_amortisation']})*(1-{i['tax_rate']})",
+            -part["financing"],
+        )
+        m.formula(17, c, f"=SUM({L}13:{L}16)", d.pf_net_income[year - 1], TOTAL)
+        m.formula(18, c, f"={L}17/$B$10", d.pf_eps[year - 1], DEC)
+        m.formula(19, c, f"={L}13/{i['acquirer_shares']}", d.standalone_eps[year - 1], DEC)
+        m.formula(20, c, f"={L}18/{L}19-1", d.accretion[year - 1], TOTAL_PCT)
+    m.set(22, 1, "Breakeven synergies (pre-tax run-rate)", BOLD)
+    m.formula(
+        22,
+        2,
+        f"=MAX(B19*B10-(B13+B14+B16),0)/({i['synergy_phase_in']}*(1-{i['tax_rate']}))",
+        d.breakeven_synergies,
+        TOTAL,
+    )
+    m.set(23, 1, "Target holders' ownership")
+    m.formula(23, 2, "=B9/B10", d.target_ownership, PCT)
     report_tables(wb, report)
     suggestions_sheet(wb, report)
     return wb.to_bytes()

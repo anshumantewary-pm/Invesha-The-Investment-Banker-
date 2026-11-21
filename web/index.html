@@ -132,7 +132,8 @@
   .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 10px 0 14px; }
   .section-head h2 { font: 400 28px var(--serif); margin: 0; }
   .section-head span { color: var(--muted); font-size: 13px; }
-  .modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 26px; }
+  .modes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 26px; }
+  @media (max-width: 1180px) { .modes { grid-template-columns: repeat(2, 1fr); } }
   .mode { position: relative; text-align: left; cursor: pointer; border-radius: var(--r); padding: 20px; border: 1px solid var(--line); color: var(--ink); font: inherit;
     background: var(--surface); backdrop-filter: blur(6px); transition: border-color .18s, background .18s, transform .18s; display: flex; flex-direction: column; gap: 8px; }
   .mode:hover { border-color: var(--line-2); background: rgba(24,24,28,.85); transform: translateY(-2px); }
@@ -188,6 +189,10 @@
 
   /* report */
   .report-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; align-items: flex-start; }
+  .summary { border: 1px solid var(--line); border-left: 2px solid var(--accent); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; margin: 14px 0 0; background: rgba(255,107,44,.04); }
+  .summary h4 { margin: 0 0 8px; font: 500 11px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-2); }
+  .summary ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; color: var(--ink-2); font-size: 14px; }
+  .summary li::marker { color: var(--accent-2); }
   .verdict { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; padding: 16px 18px; border-radius: var(--r); border: 1px solid var(--line); background: rgba(0,0,0,.2); margin: 16px 0 4px; }
   .verdict .v { font: 500 15px var(--mono); letter-spacing: .08em; padding: 8px 14px; border-radius: 8px; }
   .v.good { background: var(--good-soft); color: var(--good); } .v.warn { background: var(--warn-soft); color: var(--warn); } .v.bad { background: var(--bad-soft); color: var(--bad); } .v. { background: var(--accent-soft); color: var(--accent-2); }
@@ -261,6 +266,7 @@
   <symbol id="i-bank" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><path d="M5 10v8"/><path d="M9.5 10v8"/><path d="M14.5 10v8"/><path d="M19 10v8"/><path d="M3 20h18"/></symbol>
   <symbol id="i-project" viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/><path d="M12 4v3"/></symbol>
   <symbol id="i-growth" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+  <symbol id="i-merge" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="12" r="2.5"/><path d="M8.3 7.2 15.7 10.8"/><path d="M8.3 16.8 15.7 13.2"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
@@ -338,15 +344,17 @@
     <div class="ticker" aria-label="What each model returns">
       <div>Company valuation<b>DCF · Comps · LBO</b></div>
       <div>Project finance<b>DSCR · LLCR · IRR</b></div>
+      <div>M&amp;A<b>Accretion · Synergies</b></div>
       <div>Startup model<b>Runway · LTV/CAC · VC</b></div>
       <div>Export<b>.XLSX with formulas</b></div>
     </div>
   </section>
 
-  <div class="section-head" id="models"><h2>Select a model</h2><span>Three engines, one workflow</span></div>
+  <div class="section-head" id="models"><h2>Select a model</h2><span>Four engines, one workflow</span></div>
   <section class="modes" role="tablist" aria-label="Model type">
-    <button class="mode" role="tab" data-kind="company"><div class="top"><svg class="ico"><use href="#i-bank"/></svg><span class="n">01</span></div><h3>Company valuation</h3><p>Five-year projections, cost of capital, DCF on perpetuity growth and exit multiple, trading comparables and a leveraged buyout case.</p><div class="chips"><span>DCF</span><span>WACC</span><span>Comps</span><span>LBO</span></div></button>
+    <button class="mode" role="tab" data-kind="company"><div class="top"><svg class="ico"><use href="#i-bank"/></svg><span class="n">01</span></div><h3>Company valuation</h3><p>DCF, trading comparables, scenarios, Monte Carlo, reverse DCF, a full LBO with debt schedule, and a credit profile.</p><div class="chips"><span>DCF</span><span>Comps</span><span>Monte Carlo</span><span>LBO</span></div></button>
     <button class="mode" role="tab" data-kind="project"><div class="top"><svg class="ico"><use href="#i-project"/></svg><span class="n">02</span></div><h3>Project finance</h3><p>Construction and operations, debt sculpted to a target coverage ratio, lender metrics, equity returns and stress tests.</p><div class="chips"><span>DSCR</span><span>LLCR</span><span>Equity IRR</span><span>Tariff</span></div></button>
+    <button class="mode" role="tab" data-kind="merger"><div class="top"><svg class="ico"><use href="#i-merge"/></svg><span class="n">04</span></div><h3>M&amp;A accretion / dilution</h3><p>Merger model: offer premium, stock / debt / cash consideration, synergies, pro forma EPS, breakeven synergies and ownership.</p><div class="chips"><span>Pro forma EPS</span><span>Synergies</span><span>Ownership</span></div></button>
     <button class="mode" role="tab" data-kind="startup"><div class="top"><svg class="ico"><use href="#i-growth"/></svg><span class="n">03</span></div><h3>Startup model</h3><p>Monthly customers, recurring revenue and burn, runway and break-even, unit economics and a venture valuation.</p><div class="chips"><span>MRR</span><span>Runway</span><span>LTV/CAC</span><span>VC method</span></div></button>
   </section>
 
@@ -614,6 +622,7 @@ function render(r) {
     el("div", { class: "report-head" }, [
       el("div", {}, [el("span", { class: "eyebrow", text: "Step 4 · Report" }), el("h2", { text: r.title }), el("p", { class: "blurb", style: "margin:0", text: r.subtitle })]), dl]),
     el("div", { class: "verdict" }, [el("div", { class: "v " + (r.verdict_tone || ""), text: r.verdict }), el("p", { text: r.verdict_note })]),
+    r.summary && r.summary.length ? el("div", { class: "summary" }, [el("h4", { text: "Executive summary" }), el("ul", {}, r.summary.map(x => el("li", { text: x })))]) : null,
     el("h3", { class: "sec", text: "Key figures" }), tiles,
     el("h3", { class: "sec", text: "Charts" }), charts,
     el("h3", { class: "sec", text: "Investment view and suggestions" }), ...sugg,
@@ -666,7 +675,7 @@ function axis(svg, W, H, P, lo, hi, f) {
   for (let i = 0; i <= 4; i++) {
     const v = lo + (hi - lo) * i / 4, y = H - P.b - (H - P.t - P.b) * i / 4;
     svg.append(s("line", { x1: P.l, x2: W - P.r, y1: y, y2: y, class: "grid-l" }));
-    svg.append(s("text", { x: P.l - 6, y: y + 4, "text-anchor": "end" }, num(v, f === "money" ? "money" : f, "", "", true)));
+    svg.append(s("text", { x: P.l - 6, y: y + 4, "text-anchor": "end" }, f === "price" ? v.toFixed(2) : num(v, f === "money" ? "money" : f, "", "", true)));
   }
 }
 function barChart(box, c) {
@@ -773,6 +782,7 @@ import base64, json, math
 from dataclasses import MISSING, fields as dc_fields
 from invesha import cli, excel, inputs_io
 from invesha.corporate import CompanyInputs
+from invesha.merger import MergerInputs
 from invesha.fields import FORMS
 from invesha.project import ProjectInputs
 from invesha.startup import StartupInputs
@@ -804,9 +814,9 @@ def defaults(cls):
 def meta():
     return wrap(lambda: {"sectors": [[k, s.name] for k, s in SECTORS.items()], "examples": EXAMPLES, "forms": FORMS,
                          "defaults": {"company": defaults(CompanyInputs), "project": defaults(ProjectInputs),
-                                      "startup": defaults(StartupInputs)},
+                                      "startup": defaults(StartupInputs), "merger": defaults(MergerInputs)},
                          "required": {"company": required(CompanyInputs), "project": required(ProjectInputs),
-                                      "startup": required(StartupInputs)}})
+                                      "startup": required(StartupInputs), "merger": required(MergerInputs)}})
 
 def parse(kind, filename, b64):
     return wrap(lambda: inputs_io.parse_file(kind, filename, base64.b64decode(b64)))

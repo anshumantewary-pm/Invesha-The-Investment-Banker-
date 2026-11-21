@@ -11,12 +11,17 @@ import sys
 from collections.abc import Sequence
 from typing import Any
 
-from invesha import __version__, corporate, excel, project, startup
+from invesha import __version__, corporate, excel, merger, project, startup
 from invesha.core import InputError, Report, fmt_value
 from invesha.examples import EXAMPLES
 from invesha.sectors import SECTORS
 
-MODELS = {"company": corporate.analyse_inputs, "project": project.analyse_inputs, "startup": startup.analyse_inputs}
+MODELS = {
+    "company": corporate.analyse_inputs,
+    "project": project.analyse_inputs,
+    "startup": startup.analyse_inputs,
+    "merger": merger.analyse_inputs,
+}
 
 
 def run(kind: str, data: dict[str, Any]) -> Report:

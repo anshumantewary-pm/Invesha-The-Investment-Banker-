@@ -19,13 +19,14 @@ Your last inputs for each model are remembered per account, so you can continue 
 
 > **About accounts:** the site is static (GitHub Pages), so accounts live on the device: passwords are stored as salted SHA-256 hashes in the browser and never sent anywhere. This separates users on a shared machine but is not server-grade authentication. Connecting a hosted auth service (e.g. Supabase or Firebase) would give real, cross-device accounts.
 
-## Three models
+## Four models
 
 | Model | What you enter | What you get |
 |---|---|---|
-| 🏦 **Company valuation** | Last year's revenue and EBITDA margin, growth and margin path, capex / D&A / working capital, debt, cash, shares and price, cost-of-capital inputs | 5-year income statement and unlevered free cash flow, WACC (CAPM, relevered sector beta), DCF by perpetuity growth and exit multiple, trading comparables (EV/EBITDA, EV/Revenue, P/E), LBO returns (IRR, MOIC), WACC × growth sensitivity, value-driver tornado, football field, **Buy / Hold / Reduce** call and corporate finance options (PE sale, IPO, debt raise, M&A) |
-| 🏗️ **Project finance** | Capex, build and operating years, capacity, utilisation, price and escalation, fixed and variable opex, gearing, debt rate, tenor, target DSCR, hurdle rates | Operations and CFADS, debt sized to the lower of gearing and DSCR capacity, sculpted or annuity repayment with interest during construction, DSCR / LLCR, project and equity IRR and NPV, payback, break-even tariff, stress tests (price, capex, opex, utilisation, rates, delay), **Invest / Restructure / Do not invest** |
-| 🚀 **Startup model** | Customers, new-customer growth, ARPU, churn, gross margin, CAC, team costs, cash and planned rounds | Monthly model to cash, runway, break-even month, funding gap, LTV/CAC, CAC payback, burn multiple, Rule of 40, VC-method valuation (post / pre-money, dilution), how much to raise and by when |
+| **Company valuation** | Last year's revenue and EBITDA margin, growth and margin path, capex / D&A / working capital, debt, cash, shares and price, cost-of-capital inputs (or upload the financial statements) | 5-year income statement and unlevered free cash flow, WACC, DCF (perpetuity growth and exit multiple), trading comparables, **bear / base / bull scenarios** with a probability-weighted value, **Monte Carlo** valuation range (P10-P90) and probability of exceeding the market price, **reverse DCF** (growth implied by the price), **full LBO** (sources & uses, senior amortising + junior debt, cash sweep, credit statistics by year, entry × exit IRR grid, returns attribution), **credit profile** with an indicative rating band, football field, executive summary, **Buy / Hold / Reduce** and corporate finance options |
+| **Project finance** | Capex, build and operating years, capacity, utilisation, price and escalation, fixed and variable opex, gearing, debt rate, tenor, target DSCR, hurdle rates | Operations and CFADS, debt sized to the lower of gearing and DSCR capacity, sculpted or annuity repayment with interest during construction, DSCR / LLCR, project and equity IRR and NPV, payback, break-even tariff, stress tests (price, capex, opex, utilisation, rates, delay), **Invest / Restructure / Do not invest** |
+| **Startup model** | Customers, new-customer growth, ARPU, churn, gross margin, CAC, team costs, cash and planned rounds | Monthly model to cash, runway, break-even month, funding gap, LTV/CAC, CAC payback, burn multiple, Rule of 40, VC-method valuation (post / pre-money, dilution), how much to raise and by when |
+| **M&A accretion / dilution** | Acquirer and target net income, shares and prices, premium, stock / debt / cash mix, synergies and phase-in, fees, amortisation, optional EBITDA and net debt | Pro forma EPS for two years, accretion / dilution, breakeven synergies, offer vs acquirer P/E, ownership and contribution analysis, pro forma leverage, EPS bridge, premium × stock-mix sensitivity, **Accretive / Dilutive** verdict |
 
 Each report has key-figure tiles, a verdict, **charts** (football field, grouped bars, line charts with covenant / break-even markers, EV-to-equity waterfall, donuts, tornado), a **sensitivity heatmap**, every model table, and **prioritised suggestions** with actions.
 
@@ -65,7 +66,9 @@ python -m http.server -d site 8000
 
 ```
 src/invesha/
-  corporate.py   company model: projections, WACC, DCF, comps, LBO, suggestions
+  corporate.py   company model: projections, WACC, DCF, comps, suggestions
+  advanced.py    scenarios, Monte Carlo, reverse DCF, detailed LBO, credit profile, executive summary
+  merger.py      M&A accretion / dilution
   project.py     project finance: debt sculpting, DSCR/LLCR, IRRs, stress tests
   startup.py     monthly startup model, unit economics, VC method
   excel.py       workbook builders (live formulas)
