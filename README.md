@@ -70,6 +70,25 @@ printf '{"wheel": "%s", "version": "0.1.0"}' "$(basename dist/*.whl)" > site/man
 python -m http.server -d site 8000
 ```
 
+## Command line
+
+```bash
+invesha samples                         # list the sample library
+invesha example company:saas > in.json  # print a sample's inputs
+invesha company --file in.json --xlsx model.xlsx
+invesha merger --file deal.json --json  # full report as JSON
+invesha sectors
+```
+
+## Documentation
+
+- [Company valuation methodology](docs/methodology.md)
+- [Project finance methodology](docs/project-finance.md)
+- [M&A accretion / dilution](docs/merger-model.md)
+- [Startup model](docs/startup-model.md)
+- [Automatic input detection](docs/upload-detection.md)
+- [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [Security](SECURITY.md)
+
 ## Project layout
 
 ```
