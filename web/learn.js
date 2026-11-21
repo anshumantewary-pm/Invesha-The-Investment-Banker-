@@ -81,6 +81,12 @@ const LESSONS = [
     { h: "Precedent transactions", p: "Multiples paid in past acquisitions of similar companies. They include a <b>control premium</b>, so they usually sit above trading multiples." },
     { h: "Football field", p: "A chart that lays every method's valuation range side by side (DCF, comps, precedents, LBO, 52-week trading range) with the current price as a line. It is the centrepiece of most fairness opinions and pitch books." },
   ], pro: "The LBO bar shows what a financial sponsor could pay and still earn its target IRR. It often sets the floor of a sale process.", try: "company:fmcg" },
+  { id: "sotp", module: "relative", title: "Sum-of-the-parts valuation", minutes: 6, sections: [
+    { h: "When to use it", p: "Conglomerates and groups with very different businesses (for example manufacturing plus a software unit) are valued segment by segment, because one multiple cannot fit both." },
+    { h: "How it works", p: "Value each segment with the method and multiple that fit it, add the values, then subtract net debt and the capitalised cost of the head office.", f: "SOTP equity value = Σ (Segment EBITDA × segment multiple) − Net debt − Capitalised holding costs",
+      ex: "Segment A: EBITDA ₹150 Cr × 10x = ₹1,500 Cr. Segment B: EBITDA ₹40 Cr × 20x = ₹800 Cr. Less net debt ₹300 Cr and holding costs ₹100 Cr = ₹1,900 Cr equity." },
+    { h: "Conglomerate discount", p: "Markets often value groups 10-20% below their SOTP because of complexity and capital-allocation risk. The gap is the case for a spin-off or demerger." },
+  ], pro: "In activist and restructuring work, the SOTP gap is the headline number. Show which segment is mispriced and what unlocks the value (spin-off, sale, listing)." },
   // ---------------------------------------------------------------- 06
   { id: "sensitivity", module: "risk", title: "Sensitivity tables and tornado charts", minutes: 6, sections: [
     { h: "Sensitivity table", p: "A grid showing value as two inputs change, typically WACC (rows) × terminal growth (columns). It shows how fragile the answer is." },
