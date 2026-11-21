@@ -112,3 +112,9 @@ def test_validation():
         corporate.analyse_inputs({**COMPANY, "name": " "})
     r = corporate.analyse_inputs({**COMPANY, "growth": [0.1] * 5, "beta": 1.1, "debt_weight": 0.2})
     assert r.tiles
+
+
+@pytest.mark.parametrize("sector", ["chemicals", "auto", "education"])
+def test_new_sectors_value_the_example(sector):
+    r = corporate.analyse_inputs({**COMPANY, "sector": sector})
+    assert r.data["ev"] > 0
